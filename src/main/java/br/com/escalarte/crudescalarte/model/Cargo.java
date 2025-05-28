@@ -1,4 +1,4 @@
 package br.com.escalarte.crudescalarte.model;
 
-public class Cargo {
+public class Cargo extends BaseModel {
 }

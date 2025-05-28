@@ -1,4 +1,4 @@
 package br.com.escalarte.crudescalarte.model;
 
-public class Turno {
+public class Turno extends BaseModel {
 }
