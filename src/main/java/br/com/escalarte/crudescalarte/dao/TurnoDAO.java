@@ -19,8 +19,17 @@ public class TurnoDAO {
             String horarioFim) {
 
         int novoId = ValidationUtils.strParaInt(id);
+        if (novoId <= 0) {
+            return;
+        }
         LocalTime novoHorarioInicio = ValidationUtils.strParaLocalTime(horarioInicio);
+        if (novoHorarioInicio.equals(LocalTime.of(0, 0))) {
+            return;
+        }
         LocalTime novoHorarioFim = ValidationUtils.strParaLocalTime(horarioFim);
+        if (novoHorarioFim.equals(LocalTime.of(0, 0))) {
+            return;
+        }
 
         try {
 
@@ -28,9 +37,10 @@ public class TurnoDAO {
             turnos.add(turno);
 
             ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
-            AlertUtils.confirmar("Confirmar Cadastro", "Deseja cadastrar um novo Turno?");
-        } catch (Exception e) {
-            throw new RuntimeException();
+            AlertUtils.confirmar("Confirmar Cadastro", "Deseja cadastrar o Turno?");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -41,33 +51,48 @@ public class TurnoDAO {
             String horarioFim) {
 
         int novoId = ValidationUtils.strParaInt(id);
+        if (novoId <= 0) {
+            return;
+        }
         LocalTime novoHorarioInicio = ValidationUtils.strParaLocalTime(horarioInicio);
+        if (novoHorarioInicio.equals(LocalTime.of(0, 0))) {
+            return;
+        }
         LocalTime novoHorarioFim = ValidationUtils.strParaLocalTime(horarioFim);
+        if (novoHorarioFim.equals(LocalTime.of(0, 0))) {
+            return;
+        }
 
 
         try {
             for (Turno turnoExistente : turnos) {
                 if (turnoExistente.getId() == novoId) {
-                    if (!turnoExistente.getNome().equals(nome)) {
-                        turnoExistente.setNome(nome);
-                    }
+                    turnoExistente.setNome(nome);
                     turnoExistente.setHorarioInicio(novoHorarioInicio);
                     turnoExistente.setHorarioFim(novoHorarioFim);
+                    break;
                 }
             }
+
             ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
-            AlertUtils.mostrarErro("Confirmar Edição", "Deseja editar um novo Turno?");
+            AlertUtils.confirmar("Confirmar Edição", "Deseja editar o Turno?");
         }
         catch (Exception e) {
-            throw new RuntimeException();
+            e.printStackTrace();
         }
     }
 
-    public static void excluir(int id) {
+    public static void excluir(String id) {
         try {
+            int idEscolhido = ValidationUtils.strParaInt(id);
+
+
             for (Turno turno : turnos) {
-                if (turno.getId() == id) {
+                if (turno.getId() == idEscolhido) {
                     turnos.remove(turno);
+                    ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
+                    AlertUtils.confirmar("Confirmar Exclusão", "Esta ação é irreversível");
+                    break;
                 }
             }
         }

@@ -2,7 +2,6 @@ package br.com.escalarte.crudescalarte.ui;
 
 import br.com.escalarte.crudescalarte.dao.TurnoDAO;
 import br.com.escalarte.crudescalarte.model.Turno;
-import br.com.escalarte.crudescalarte.util.AlertUtils;
 import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
 import javafx.application.Application;
 
@@ -66,8 +65,8 @@ public class TurnoUI extends Application {
         Button atualizar = new Button("Atualizar");
 
         cadastrar.setOnAction(e -> TurnoDAO.cadastrar(idField.getText(), nomeField.getText(), horarioInicioField.getText(), horarioFimField.getText()));
-        //editar.setOnAction(e -> TurnoDAO.editar(idField.getText(), nomeField.getText(), horarioInicioField.getText(), horarioFimField.getText()));
-        //excluir.setOnAction(e -> TurnoDAO.excluir(idField.getText()));
+        editar.setOnAction(e -> TurnoDAO.editar(idField.getText(), nomeField.getText(), horarioInicioField.getText(), horarioFimField.getText()));
+        excluir.setOnAction(e -> TurnoDAO.excluir(idField.getText()));
         atualizar.setOnAction(e -> TurnoDAO.atualizar(table));
 
         hbox.getChildren().addAll(cadastrar, editar, excluir, atualizar);

@@ -10,7 +10,7 @@ public class ValidationUtils {
         }
         catch (NumberFormatException e) {
             AlertUtils.mostrarErro("Erro", "Insira um número inteiro válido");
-            throw new IllegalArgumentException("Número inteiro inválido: " + texto);
+            return 0;
         }
     }
 
@@ -20,7 +20,7 @@ public class ValidationUtils {
         }
         catch (DateTimeException e) {
             AlertUtils.mostrarErro("Erro", "Insira o horário no formato correto");
-            throw new IllegalArgumentException("Hora inválida: " + texto);
+            return LocalTime.of(0, 0);
         }
     }
 }
