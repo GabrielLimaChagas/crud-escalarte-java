@@ -1,4 +1,4 @@
-package br.com.escalarte.crudescalarte.ui;
+package br.com.escalarte.crudescalarte.ui.turnoUI;
 
 import br.com.escalarte.crudescalarte.dao.TurnoDAO;
 import br.com.escalarte.crudescalarte.model.Turno;
@@ -13,7 +13,7 @@ import javafx.stage.Stage;
 
 
 
-public class TurnoUI extends Application {
+public class TurnoMain extends Application {
 
     @Override
     public void start(Stage primaryStage) {
@@ -25,22 +25,13 @@ public class TurnoUI extends Application {
 
         VBox vbox = new VBox(1);
         HBox hbox = new HBox(1);
+        HBox excluirBox = new HBox(1);
+
+        vbox.setSpacing(15);
 
         TextField idField = new TextField();
-        idField.setPromptText("ID");
+        idField.setPromptText("Selecione um ID");
         idField.setMaxWidth(150);
-
-        TextField nomeField = new TextField();
-        nomeField.setPromptText("Nome ");
-        nomeField.setMaxWidth(150);
-
-        TextField horarioInicioField = new TextField();
-        horarioInicioField.setPromptText("Horário Início (HH/mm)");
-        horarioInicioField.setMaxWidth(150);
-
-        TextField horarioFimField = new TextField();
-        horarioFimField.setPromptText("Horário Fim (HH/mm)");
-        horarioFimField.setMaxWidth(150);
 
         TableColumn<Turno, String> idCol = new TableColumn<>("Id");
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -64,17 +55,17 @@ public class TurnoUI extends Application {
         Button excluir = new Button("Excluir");
         Button atualizar = new Button("Atualizar");
 
-        cadastrar.setOnAction(e -> TurnoDAO.cadastrar(idField.getText(), nomeField.getText(), horarioInicioField.getText(), horarioFimField.getText()));
-        editar.setOnAction(e -> TurnoDAO.editar(idField.getText(), nomeField.getText(), horarioInicioField.getText(), horarioFimField.getText()));
+        cadastrar.setOnAction(e -> new TurnoCadastro().start(new Stage()));
+        editar.setOnAction(e -> new TurnoEdit().start(new Stage()));
         excluir.setOnAction(e -> TurnoDAO.excluir(idField.getText()));
         atualizar.setOnAction(e -> TurnoDAO.atualizar(table));
 
-        hbox.getChildren().addAll(cadastrar, editar, excluir, atualizar);
-        vbox.getChildren().addAll(table, hbox, idField, nomeField, horarioInicioField, horarioFimField);
+        hbox.getChildren().addAll(cadastrar, editar, atualizar);
+        excluirBox.getChildren().addAll(idField, excluir);
+        vbox.getChildren().addAll(table, hbox, excluirBox);
 
         Scene scene = new Scene(vbox, 500, 300);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 }
-

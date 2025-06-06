@@ -12,6 +12,7 @@ public class ObjectPersistenceUtils {
                 lista.clear();
                 lista.addAll(dados);
             } catch (IOException | ClassNotFoundException e) {
+                AlertUtils.mostrarErro("Erro", "Não foi possível ler os dados");
                 e.printStackTrace();
             }
         }
@@ -22,6 +23,7 @@ public class ObjectPersistenceUtils {
              ObjectOutputStream oos = new ObjectOutputStream(fos)) {
             oos.writeObject(lista);
         } catch (IOException e) {
+            AlertUtils.mostrarErro("Erro", "Não foi possível salvar os dados");
             e.printStackTrace();
         }
     }

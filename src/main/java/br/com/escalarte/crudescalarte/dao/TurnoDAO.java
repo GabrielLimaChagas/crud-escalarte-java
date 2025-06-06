@@ -5,6 +5,7 @@ import br.com.escalarte.crudescalarte.util.AlertUtils;
 import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
 import br.com.escalarte.crudescalarte.util.ValidationUtils;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class TurnoDAO {
         if (novoId <= 0) {
             return;
         }
+
         LocalTime novoHorarioInicio = ValidationUtils.strParaLocalTime(horarioInicio);
         if (novoHorarioInicio.equals(LocalTime.of(0, 0))) {
             return;
@@ -31,17 +33,31 @@ public class TurnoDAO {
             return;
         }
 
-        try {
+        for (Turno turno : turnos) {
+            if (turno.getId() == novoId) {
+                AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
+                return;
+            }
+            if (turno.getNome().equals(nome)) {
+                AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
+                return;
+            }
+            if (turno.getHorarioInicio().equals(novoHorarioInicio)) {
+                AlertUtils.mostrarErro("Erro", "Horário de Início já existente no sistema");
 
-            Turno turno = new Turno(novoId, nome, novoHorarioInicio, novoHorarioFim);
-            turnos.add(turno);
+                return;
+            }
+            if (turno.getHorarioFim().equals(novoHorarioFim)) {
+                AlertUtils.mostrarErro("Erro", "Horário Final já existente no sistema");
+                return;
+            }
+        }
 
-            ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
-            AlertUtils.confirmar("Confirmar Cadastro", "Deseja cadastrar o Turno?");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        Turno turno = new Turno(novoId, nome, novoHorarioInicio, novoHorarioFim);
+        turnos.add(turno);
+
+        ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
+        AlertUtils.mostrarInfo("Cadastro", "Turno cadastrado com sucesso");
     }
 
     public static void editar(
@@ -63,6 +79,26 @@ public class TurnoDAO {
             return;
         }
 
+        for (Turno turno : turnos) {
+            if (turno.getId() == novoId) {
+                AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
+                return;
+            }
+            if (turno.getNome().equals(nome)) {
+                AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
+                return;
+            }
+            if (turno.getHorarioInicio().equals(novoHorarioInicio)) {
+                AlertUtils.mostrarErro("Erro", "Horário de Início já existente no sistema");
+
+                return;
+            }
+            if (turno.getHorarioFim().equals(novoHorarioFim)) {
+                AlertUtils.mostrarErro("Erro", "Horário Final já existente no sistema");
+                return;
+            }
+        }
+
 
         try {
             for (Turno turnoExistente : turnos) {
@@ -75,7 +111,7 @@ public class TurnoDAO {
             }
 
             ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
-            AlertUtils.confirmar("Confirmar Edição", "Deseja editar o Turno?");
+            AlertUtils.mostrarInfo("Edição", "Turno editado com sucesso");
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -85,19 +121,24 @@ public class TurnoDAO {
     public static void excluir(String id) {
         try {
             int idEscolhido = ValidationUtils.strParaInt(id);
+            boolean encontrado = false;
 
 
             for (Turno turno : turnos) {
                 if (turno.getId() == idEscolhido) {
+                    encontrado = true;
                     turnos.remove(turno);
                     ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
-                    AlertUtils.confirmar("Confirmar Exclusão", "Esta ação é irreversível");
+                    AlertUtils.mostrarInfo("Exclusão", "Turno excluído com sucesso");
                     break;
                 }
             }
+            if (!encontrado) {
+                throw new Exception();
+            }
         }
-        catch (RuntimeException e) {
-            throw new RuntimeException(e);
+        catch (Exception e) {
+            AlertUtils.mostrarErro("Erro", "ID não encontrado");
         }
     }
 
@@ -105,10 +146,17 @@ public class TurnoDAO {
         try {
             ObjectPersistenceUtils.lerDados("turnos.dat", TurnoDAO.turnos);
             table.getItems().setAll(TurnoDAO.turnos);
-            AlertUtils.confirmar("Atualizado", "Lista atualizada com sucesso!");
+            AlertUtils.mostrarInfo("Atualizado", "Lista atualizada com sucesso");
         }
         catch (Exception e) {
             AlertUtils.mostrarErro("Erro", "Falha ao atualizar lista: ");
         }
+    }
+
+    public static void limpar(TextField id, TextField nome, TextField horarioInicio, TextField horarioFim) {
+        id.clear();
+        nome.clear();
+        horarioInicio.clear();
+        horarioFim.clear();
     }
 }

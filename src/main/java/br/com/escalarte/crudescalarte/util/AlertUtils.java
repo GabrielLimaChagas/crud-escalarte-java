@@ -11,9 +11,9 @@ public class AlertUtils {
         alert.showAndWait();
     }
 
-    public static void confirmar(String titulo, String mensagem) {
+    public static void mostrarInfo(String titulo, String mensagem) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Confirmar");
+        alert.setTitle("Informação");
         alert.setHeaderText(titulo);
         alert.setContentText(mensagem);
         alert.showAndWait();

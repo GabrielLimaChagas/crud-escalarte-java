@@ -2,6 +2,7 @@ package br.com.escalarte.crudescalarte.util;
 
 import java.time.DateTimeException;
 import java.time.LocalTime;
+import java.util.ArrayList;
 
 public class ValidationUtils {
     public static int strParaInt(String texto) {
@@ -21,6 +22,15 @@ public class ValidationUtils {
         catch (DateTimeException e) {
             AlertUtils.mostrarErro("Erro", "Insira o horário no formato correto");
             return LocalTime.of(0, 0);
+        }
+    }
+
+    public static void campoVazio(String texto) {
+        try {
+
+        }
+        catch(NullPointerException e) {
+            AlertUtils.mostrarErro("Erro", "Não é permitido deixar campos em branco");
         }
     }
 }

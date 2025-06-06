@@ -1,6 +1,6 @@
 package br.com.escalarte.crudescalarte.main;
 
-import br.com.escalarte.crudescalarte.ui.*;
+import br.com.escalarte.crudescalarte.ui.turnoUI.TurnoMain;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -25,7 +25,7 @@ public class Main extends Application {
         // btnCargo.setOnAction(e -> new CargoUI().start(new Stage()));
         // btnColaborador.setOnAction(e -> new ColaboradorUI().start(new Stage()));
         // btnSetor.setOnAction(e -> new SetorUI().start(new Stage()));
-        btnTurno.setOnAction(e -> new TurnoUI().start(new Stage()));
+        btnTurno.setOnAction(e -> new TurnoMain().start(new Stage()));
 
         //VBox é um layout que organiza os botões verticalmente com espaçamento de 10 pixels
         VBox layout = new VBox(10, btnContrato, btnCargo, btnColaborador, btnSetor, btnTurno);
