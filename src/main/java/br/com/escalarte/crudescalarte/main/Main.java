@@ -1,5 +1,6 @@
 package br.com.escalarte.crudescalarte.main;
 
+import br.com.escalarte.crudescalarte.ui.cargoUI.CargoMain;
 import br.com.escalarte.crudescalarte.ui.setorUI.SetorMain;
 import br.com.escalarte.crudescalarte.ui.turnoUI.TurnoMain;
 import javafx.application.Application;
@@ -23,7 +24,7 @@ public class Main extends Application {
         // Abrem janelas específicas quando os botões são clicados
 
         // btnContrato.setOnAction(e -> new ContratoUI().start(new Stage()));
-        // btnCargo.setOnAction(e -> new CargoUI().start(new Stage()));
+        btnCargo.setOnAction(e -> new CargoMain().start(new Stage()));
         // btnColaborador.setOnAction(e -> new ColaboradorUI().start(new Stage()));
         btnSetor.setOnAction(e -> new SetorMain().start(new Stage()));
         btnTurno.setOnAction(e -> new TurnoMain().start(new Stage()));
