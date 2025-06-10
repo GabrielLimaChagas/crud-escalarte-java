@@ -22,7 +22,7 @@ public class TurnoEdit {
         vbox.setAlignment(Pos.TOP_CENTER);
         hbox.setAlignment(Pos.BASELINE_CENTER);
 
-        Label titulo = new Label("Atualizar");
+        Label titulo = new Label("Editar");
         titulo.setFont(Font.font("Arial", FontWeight.BOLD, 24));
 
         Label idLabel = new Label("Id:");
@@ -46,8 +46,9 @@ public class TurnoEdit {
         horarioFimField.setMaxWidth(150);
 
         Button editar = new Button("Editar");
+        Button limpar = new Button("Limpar");
 
-        editar.setOnAction(e ->
+        editar.setOnAction(_ ->
 
             TurnoDAO.editar(
                     idField.getText(),
@@ -56,7 +57,11 @@ public class TurnoEdit {
                     horarioFimField.getText())
             );
 
-        hbox.getChildren().addAll(editar);
+        limpar.setOnAction(_ ->
+                TurnoDAO.limpar(idField, nomeField, horarioInicioField, horarioFimField)
+        );
+
+        hbox.getChildren().addAll(editar, limpar);
         vbox.getChildren().addAll(titulo, idLabel, idField, nomeLabel, nomeField, horarioInicioLabel, horarioInicioField, horarioFimLabel, horarioFimField, hbox);
 
         Scene scene = new Scene(vbox, 500, 300);

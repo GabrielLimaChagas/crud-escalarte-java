@@ -46,16 +46,21 @@ public class TurnoCadastro {
         horarioFimField.setMaxWidth(150);
 
         Button cadastrar = new Button("Cadastrar");
+        Button limpar = new Button("Limpar");
 
-        cadastrar.setOnAction(e ->
+        cadastrar.setOnAction(_ ->
                 TurnoDAO.cadastrar(idField.getText(),
                 nomeField.getText(),
                 horarioInicioField.getText(),
                 horarioFimField.getText())
         );
 
+        limpar.setOnAction(_ ->
+                TurnoDAO.limpar(idField, nomeField, horarioInicioField, horarioFimField)
+        );
 
-        hbox.getChildren().addAll(cadastrar);
+
+        hbox.getChildren().addAll(cadastrar, limpar);
         vbox.getChildren().addAll(titulo, idLabel, idField, nomeLabel, nomeField, horarioInicioLabel, horarioInicioField, horarioFimLabel, horarioFimField, hbox);
 
         Scene scene = new Scene(vbox, 500, 300);

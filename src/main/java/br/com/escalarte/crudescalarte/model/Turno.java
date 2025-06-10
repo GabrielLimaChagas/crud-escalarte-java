@@ -16,7 +16,6 @@ public class Turno extends BaseModel implements Serializable {
     }
 
     public Turno() {
-
     }
 
     public String getNome() {

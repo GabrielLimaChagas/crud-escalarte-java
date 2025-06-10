@@ -11,7 +11,11 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 public class TurnoDAO {
-    public static ArrayList<Turno> turnos = new ArrayList<>();
+    private static ArrayList<Turno> turnos = new ArrayList<>();
+
+    public static ArrayList<Turno> getTurnos() {
+        return turnos;
+    }
 
     public static void cadastrar(
             String id,
@@ -21,6 +25,11 @@ public class TurnoDAO {
 
         int novoId = ValidationUtils.strParaInt(id);
         if (novoId <= 0) {
+            return;
+        }
+
+        if (nome.length() < 4 || nome.length() > 50) {
+            AlertUtils.mostrarErro("Erro", "O nome deve ter entre 4 a 50 caracteres");
             return;
         }
 
@@ -42,13 +51,8 @@ public class TurnoDAO {
                 AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
                 return;
             }
-            if (turno.getHorarioInicio().equals(novoHorarioInicio)) {
-                AlertUtils.mostrarErro("Erro", "Horário de Início já existente no sistema");
-
-                return;
-            }
-            if (turno.getHorarioFim().equals(novoHorarioFim)) {
-                AlertUtils.mostrarErro("Erro", "Horário Final já existente no sistema");
+            if (turno.getHorarioFim().equals(novoHorarioFim) && turno.getHorarioInicio().equals(novoHorarioInicio)) {
+                AlertUtils.mostrarErro("Erro", "Há um turno com este horário já existente no sistema");
                 return;
             }
         }
@@ -88,34 +92,24 @@ public class TurnoDAO {
                 AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
                 return;
             }
-            if (turno.getHorarioInicio().equals(novoHorarioInicio)) {
-                AlertUtils.mostrarErro("Erro", "Horário de Início já existente no sistema");
-
-                return;
-            }
-            if (turno.getHorarioFim().equals(novoHorarioFim)) {
-                AlertUtils.mostrarErro("Erro", "Horário Final já existente no sistema");
+            if (turno.getHorarioFim().equals(novoHorarioFim) && turno.getHorarioInicio().equals(novoHorarioInicio)) {
+                AlertUtils.mostrarErro("Erro", "Há um turno com este horário já existente no sistema");
                 return;
             }
         }
 
 
-        try {
-            for (Turno turnoExistente : turnos) {
-                if (turnoExistente.getId() == novoId) {
-                    turnoExistente.setNome(nome);
-                    turnoExistente.setHorarioInicio(novoHorarioInicio);
-                    turnoExistente.setHorarioFim(novoHorarioFim);
-                    break;
-                }
+        for (Turno turnoExistente : turnos) {
+            if (turnoExistente.getId() == novoId) {
+                turnoExistente.setNome(nome);
+                turnoExistente.setHorarioInicio(novoHorarioInicio);
+                turnoExistente.setHorarioFim(novoHorarioFim);
+                break;
             }
+        }
 
-            ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
-            AlertUtils.mostrarInfo("Edição", "Turno editado com sucesso");
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+        ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
+        AlertUtils.mostrarInfo("Edição", "Turno editado com sucesso");
     }
 
     public static void excluir(String id) {

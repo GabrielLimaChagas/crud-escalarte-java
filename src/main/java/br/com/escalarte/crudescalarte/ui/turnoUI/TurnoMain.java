@@ -3,7 +3,6 @@ package br.com.escalarte.crudescalarte.ui.turnoUI;
 import br.com.escalarte.crudescalarte.dao.TurnoDAO;
 import br.com.escalarte.crudescalarte.model.Turno;
 import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
-import javafx.application.Application;
 
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -13,9 +12,7 @@ import javafx.stage.Stage;
 
 
 
-public class TurnoMain extends Application {
-
-    @Override
+public class TurnoMain {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Gerenciador de Turnos");
 
@@ -47,24 +44,24 @@ public class TurnoMain extends Application {
 
         table.getColumns().addAll(idCol, nomeCol, horarioInicioCol, horarioFimCol);
 
-        ObjectPersistenceUtils.lerDados("turnos.dat", TurnoDAO.turnos);
-        table.getItems().addAll(TurnoDAO.turnos);
+        ObjectPersistenceUtils.lerDados("turnos.dat", TurnoDAO.getTurnos());
+        table.getItems().addAll(TurnoDAO.getTurnos());
 
         Button cadastrar = new Button("Cadastrar");
         Button editar = new Button("Editar");
         Button excluir = new Button("Excluir");
         Button atualizar = new Button("Atualizar");
 
-        cadastrar.setOnAction(e -> new TurnoCadastro().start(new Stage()));
-        editar.setOnAction(e -> new TurnoEdit().start(new Stage()));
-        excluir.setOnAction(e -> TurnoDAO.excluir(idField.getText()));
-        atualizar.setOnAction(e -> TurnoDAO.atualizar(table));
+        cadastrar.setOnAction(_ -> new TurnoCadastro().start(new Stage()));
+        editar.setOnAction(_ -> new TurnoEdit().start(new Stage()));
+        excluir.setOnAction(_ -> TurnoDAO.excluir(idField.getText()));
+        atualizar.setOnAction(_ -> TurnoDAO.atualizar(table));
 
         hbox.getChildren().addAll(cadastrar, editar, atualizar);
         excluirBox.getChildren().addAll(idField, excluir);
         vbox.getChildren().addAll(table, hbox, excluirBox);
 
-        Scene scene = new Scene(vbox, 500, 300);
+        Scene scene = new Scene(vbox, 750, 450);
         primaryStage.setScene(scene);
         primaryStage.show();
     }
