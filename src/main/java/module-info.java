@@ -8,4 +8,5 @@ module br.com.escalarte.crudescalarte {
     exports br.com.escalarte.crudescalarte.ui;
     exports br.com.escalarte.crudescalarte.util;
     exports br.com.escalarte.crudescalarte.ui.turnoUI;
+    exports br.com.escalarte.crudescalarte.ui.setorUI;
 }

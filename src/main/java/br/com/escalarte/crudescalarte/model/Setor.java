@@ -2,26 +2,19 @@ package br.com.escalarte.crudescalarte.model;
 
 import java.io.Serializable;
 
-public class Setor implements Serializable {
+public class Setor extends BaseModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int idSetor;
-    private int quantidadeColaboradores;
     private String nomeSetor;
+    private String nomeGerente;
+    private int quantidadeColaboradores;
 
-    public Setor(int idSetor, String nomeSetor, int quantidadeColaboradores) {
-        this.idSetor = idSetor;
+    public Setor( int id, String nomeSetor, String nomeGerente, int quantidadeColaboradores) {
+        super(id);
         this.nomeSetor = nomeSetor;
+        this.nomeGerente = nomeGerente;
         this.quantidadeColaboradores = quantidadeColaboradores;
-    }
-
-    public int getIdSetor() {
-        return idSetor;
-    }
-
-    public void setIdSetor(int idSetor) {
-        this.idSetor = idSetor;
     }
 
     public String getNomeSetor() {
@@ -40,22 +33,21 @@ public class Setor implements Serializable {
         this.quantidadeColaboradores = quantidadeColaboradores;
     }
 
+    public String getNomeGerente() {
+        return nomeGerente;
+    }
+
+    public void setNomeGerente(String nomeGerente) {
+        this.nomeGerente = nomeGerente;
+    }
+
+    @Override
     public String toString() {
-        return this.nomeSetor;
+        return "ID: " + getId() + "\n"
+                + "Setor: " + getNomeSetor() + "\n"
+                + "Gerente: " + getNomeGerente() + "\n"
+                + "Colaboradores: " + getQuantidadeColaboradores() + "\n";
     }
 
-    @Override
-    public boolean equals (Object obj) {
-        if (this == obj) return true;
-        if (obj == null || getClass() != obj.getClass())
-            return false;
-        Setor setor = (Setor) obj;
-        return this.idSetor == setor.idSetor;
-    }
-
-    @Override
-    public int hashCode() {
-        return Integer.hashCode(idSetor);
-    }
 }
 

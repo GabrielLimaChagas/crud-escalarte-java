@@ -1,69 +1,145 @@
 package br.com.escalarte.crudescalarte.dao;
 
-import java.io.*;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
 
+import java.util.ArrayList;
 import br.com.escalarte.crudescalarte.model.Setor;
+import br.com.escalarte.crudescalarte.util.AlertUtils;
+import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
+import br.com.escalarte.crudescalarte.util.ValidationUtils;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 public class SetorDAO {
+    private static ArrayList<Setor> setores = new ArrayList<>();
 
-    private static final String ARQUIVO_SETOR = "Setor.dat";
-
-    public static void salvarLista(ArrayList<Setor> setor){
-        FileOutputStream f;
-        try {
-            File arq = new File(ARQUIVO_SETOR);
-            if(!arq.exists()){
-                arq.createNewFile();
-            }
-            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(arq));
-            oos.writeObject(setor);
-            oos.close();
-            System.out.println("Lista de setores salva com sucesso.");
-        }
-        catch (FileNotFoundException e) {
-            System.err.println("Erro ao salvar lista: " + e.getMessage());
-        }
-        catch (IOException e) {
-            System.err.println("Erro ao salvar lista: " + e.getMessage());
-        }
+    public static ArrayList<Setor> getSetores() {
+        return setores;
     }
 
-    public static ArrayList<Setor> lerLista() {
-        ArrayList<Setor> lista = new ArrayList<>();
-        try {
-            File arq = new File(ARQUIVO_SETOR);
-            if (arq.exists()) {
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ARQUIVO_SETOR));
-                lista = (ArrayList<Setor>) ois.readObject();
-                ois.close();
-            }
-        }
-        catch (FileNotFoundException e) {
-            System.err.println("Erro ao ler lista: " + e.getMessage());
-        }
-        catch (IOException e) {
-            System.err.println("Erro ao ler lista: " + e.getMessage());
-        }
-        catch (ClassNotFoundException e) {
-            System.err.println("Erro ao ler lista: " + e.getMessage());
-        }
-        return lista;
-    }
+    //Cadastrar novo setor
 
-    public static void adicionarSetor(Setor setor) {
-        ArrayList<Setor> setores = lerLista();
+    public static void cadastrar(
+            String id,
+            String nomeSetor,
+            String nomeGerente,
+            String quantidadeColaboradores
+            )
+    {
+
+        int novoId = ValidationUtils.strParaInt(id);
+        if (novoId <= 0) {
+            return;
+        }
+
+        if (nomeSetor.length() < 4 || nomeSetor.length() > 50) {
+            AlertUtils.mostrarErro("Erro", "O nome do setor deve ter entre 1 e 20 caracteres");
+            return;
+        }
+
+        for (Setor setor : setores) {
+            if (setor.getId() == novoId) {
+                AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
+                return;
+            }
+            if (setor.getNomeSetor().equals(nomeSetor)) {
+                AlertUtils.mostrarErro("Erro", "Existe um setor com o mesmo nome");
+                return;
+            }
+            if (setor.getNomeGerente().equals(nomeGerente)) {
+                AlertUtils.mostrarErro("Erro", "Gerente já cadastrado em outro setor");
+                return;
+            }
+
+        }
+
+        // talvez eu precise rever essa parte
+        int qtd = Integer.parseInt(quantidadeColaboradores);
+
+        Setor setor = new Setor(novoId, nomeSetor, nomeGerente, qtd );
         setores.add(setor);
-        salvarLista(setores);
+
+        ObjectPersistenceUtils.gravarDados("setores.dat", setores);
+        AlertUtils.mostrarInfo("Cadastro", "Novo setor foi cadastrado com sucesso");
     }
 
-    public static void removerSetor(Setor setor) {
-        ArrayList<Setor> setores = lerLista();
-        setores.remove(setor);
-        salvarLista(setores);
+    public static void editar(
+            String id,
+            int quantidadeColaboradores,
+            String nomeSetor,
+            String nomeGerente) {
+
+        int novoId = ValidationUtils.strParaInt(id);
+        if (novoId <= 0) {
+            return;
+        }
+
+        for (Setor setor : setores) {
+            if (setor.getId() == novoId) {
+                AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
+                return;
+            }
+            if (setor.getNomeSetor().equals(nomeSetor)) {
+                AlertUtils.mostrarErro("Erro", "Existe um setor com o mesmo nome");
+                return;
+            }
+            if (setor.getNomeGerente().equals(nomeGerente)) {
+                AlertUtils.mostrarErro("Erro", "Gerente já cadastrado em outro setor");
+                return;
+            }
+        }
+
+        for (Setor setorExistente : setores) {
+            if (setorExistente.getId() == novoId) {
+                setorExistente.setNomeSetor(nomeSetor);
+                setorExistente.setNomeGerente(nomeGerente);
+                break;
+            }
+        }
+
+        ObjectPersistenceUtils.gravarDados("Setores.dat", setores);
+        AlertUtils.mostrarInfo("Editar", "Setor editado!");
+    }
+
+    public static void apagar(String id) {
+        try {
+            int idEscolhido = ValidationUtils.strParaInt(id);
+            boolean encontrado = false;
+
+
+            for (Setor setor : setores) {
+                if (setor.getId() == idEscolhido) {
+                    encontrado = true;
+                    setores.remove(setor);
+                    ObjectPersistenceUtils.gravarDados("setores.dat", setores);
+                    AlertUtils.mostrarInfo("Excluir", "O setor foi apagado com sucesso");
+                    break;
+                }
+            }
+            if (!encontrado) {
+                throw new Exception();
+            }
+        }
+        catch (Exception e) {
+            AlertUtils.mostrarErro("Erro", "ID não encontrado");
+        }
+    }
+
+    public static void atualizar(TableView<Setor> table) {
+        try {
+            ObjectPersistenceUtils.lerDados("setores.dat", SetorDAO.setores);
+            table.getItems().setAll(SetorDAO.setores);
+            AlertUtils.mostrarInfo("Atualizado", "Lista atualizada com sucesso");
+        }
+        catch (Exception e) {
+            AlertUtils.mostrarErro("Erro", "Falha ao atualizar lista: ");
+        }
+    }
+
+    public static void limpar(TextField id, TextField nomeSetor, TextField nomeGerente, TextField quantidadeColaboradores) {
+        id.clear();
+        nomeSetor.clear();
+        nomeGerente.clear();
+        quantidadeColaboradores.clear();
     }
 }
 
