@@ -49,7 +49,6 @@ public class CargoCadastro {
         Button limpar = new Button("Limpar");
 
         cadastrar.setOnAction(_ -> CargoDAO.cadastrar(
-                idField.getText(),
                 nomeField.getText(),
                 cargaHorariaField.getText(),
                 interjornadaField.getText()));

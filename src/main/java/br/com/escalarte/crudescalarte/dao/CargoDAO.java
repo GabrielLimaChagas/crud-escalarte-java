@@ -16,77 +16,81 @@ public class CargoDAO {
         return cargos;
     }
 
-    private static Cargo converterCampos(
-            String idStr,
+    public static void cadastrar(
             String nomeStr,
             String cargaHorariaStr,
             String interjornadaStr) {
-        int id = ValidationUtils.strParaInt(idStr);
-        if (id <= 0)
-            return null;
+        int newId;
+        boolean idExists = true;
+        do {
+            newId = (int) (Math.random() * 1000);
+            final int finalNewId = newId;
+            idExists = cargos.stream().anyMatch(c -> c.getId() == finalNewId);
+        } while (idExists);
 
         if (nomeStr.length() < 4 || nomeStr.length() > 50) {
             AlertUtils.mostrarErro("Erro", "O nome deve ter entre 4 a 50 caracteres");
-            return null;
+            return;
         }
 
         Integer cargaHoraria = ValidationUtils.strParaInt(cargaHorariaStr);
         if (cargaHoraria <= 0) {
-            return null;
+            return;
         }
         Integer interjornada = ValidationUtils.strParaInt(interjornadaStr);
         if (interjornada <= 0)
-            return null;
+            return;
 
         for (Cargo cargo : cargos) {
-            if (cargo.getId() == id) {
-                AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
-                return null;
-            }
             if (cargo.getNome().equals(nomeStr)) {
                 AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
-                return null;
+                return;
             }
         }
 
-        Cargo cargo = new Cargo(id, nomeStr, cargaHoraria, interjornada);
-        return cargo;
-    }
+        Cargo cargo = new Cargo(newId, nomeStr, cargaHoraria, interjornada);
 
-    public static void cadastrar(
-            String idStr,
-            String nomeStr,
-            String cargaHorariaStr,
-            String interjornadaStr) {
-
-        Cargo cargo = converterCampos(idStr, nomeStr, cargaHorariaStr, interjornadaStr);
-        if (cargo == null) {
+        if (cargo != null) {
+            cargos.add(cargo);
+            ObjectPersistenceUtils.gravarDados(Cargo.NOME_ARQUIVO, cargos);
+            AlertUtils.mostrarInfo("Cadastro", "Cargo cadastrado com sucesso");
             return;
         }
-        cargos.add(cargo);
-
-        ObjectPersistenceUtils.gravarDados(Cargo.NOME_ARQUIVO, cargos);
-        AlertUtils.mostrarInfo("Cadastro", "Cargo cadastrado com sucesso");
+        AlertUtils.mostrarErro("Cadastro", "Erro ao cadastrar cargo.");
     }
 
     public static void editar(
             String id,
-            String nome,
-            String horarioInicio,
-            String horarioFim) {
-        Cargo newCargo = converterCampos(
-                String.valueOf(id),
-                nome,
-                horarioInicio,
-                horarioFim);
-        if (newCargo == null) {
+            String nomeStr,
+            String cargaHorariaStr,
+            String interjornadaStr) {
+        int idInt = ValidationUtils.strParaInt(id);
+
+        if (nomeStr.length() < 4 || nomeStr.length() > 50) {
+            AlertUtils.mostrarErro("Erro", "O nome deve ter entre 4 a 50 caracteres");
             return;
         }
+
+        Integer cargaHoraria = ValidationUtils.strParaInt(cargaHorariaStr);
+        if (cargaHoraria <= 0) {
+            return;
+        }
+        Integer interjornada = ValidationUtils.strParaInt(interjornadaStr);
+        if (interjornada <= 0)
+            return;
+
+        for (Cargo cargo : cargos) {
+            if (cargo.getNome().equals(nomeStr)) {
+                AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
+                return;
+            }
+        }
+
         for (Cargo cargoExistente : cargos) {
-            if (cargoExistente.getId() == newCargo.getId()) {
-                cargoExistente.setNome(nome);
-                cargoExistente.setCargaHoraria(ValidationUtils.strParaInt(horarioInicio));
-                cargoExistente.setInterjornada(ValidationUtils.strParaInt(horarioFim));
+            if (cargoExistente.getId() == idInt) {
+                cargoExistente.setNome(nomeStr);
+                cargoExistente.setCargaHoraria(cargaHoraria);
+                cargoExistente.setInterjornada(interjornada);
                 break;
             }
         }
