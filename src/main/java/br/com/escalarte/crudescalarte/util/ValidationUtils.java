@@ -25,12 +25,9 @@ public class ValidationUtils {
         }
     }
 
-    public static void campoVazio(String texto) {
-        try {
-
-        }
-        catch(NullPointerException e) {
-            AlertUtils.mostrarErro("Erro", "Não é permitido deixar campos em branco");
+    public static void validarNome(String nome) {
+        if (!nome.matches("^[A-Za-zÀ-ÿ]+( [A-Za-zÀ-ÿ]+)*$")) {
+            throw new IllegalArgumentException();
         }
     }
 }
