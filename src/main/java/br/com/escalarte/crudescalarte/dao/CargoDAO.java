@@ -6,6 +6,7 @@ import br.com.escalarte.crudescalarte.model.Cargo;
 import br.com.escalarte.crudescalarte.util.AlertUtils;
 import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
 import br.com.escalarte.crudescalarte.util.ValidationUtils;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 
@@ -84,7 +85,7 @@ public class CargoDAO {
             return;
 
         for (Cargo cargo : cargos) {
-            if (cargo.getNome().equals(nomeStr)) {
+            if (cargo.getNome().equals(nomeStr) && cargo.getId() != id) {
                 AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
                 return;
             }
@@ -117,13 +118,21 @@ public class CargoDAO {
         }
     }
 
-    public static void atualizar(TableView<Cargo> table) {
+    public static ArrayList<Cargo> atualizar() {
         try {
-            ObjectPersistenceUtils.lerDados(Cargo.NOME_ARQUIVO, CargoDAO.cargos);
-            table.getItems().setAll(CargoDAO.cargos);
-            AlertUtils.mostrarInfo("Atualizado", "Lista atualizada com sucesso");
+            ArrayList<Object> objetos = (ArrayList<Object>) ObjectPersistenceUtils.lerDados(Cargo.NOME_ARQUIVO);
+            ArrayList<Cargo> newCargos = new ArrayList<>();
+            for (Object obj : objetos) {
+                if (obj instanceof Cargo) {
+                    newCargos.add((Cargo) obj);
+                }
+            }
+            cargos.clear();
+            cargos.addAll(newCargos);
+            return newCargos;
         } catch (Exception e) {
             AlertUtils.mostrarErro("Erro", "Falha ao atualizar lista: ");
+            return null;
         }
     }
 

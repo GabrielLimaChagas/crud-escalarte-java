@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import br.com.escalarte.crudescalarte.dao.CargoDAO;
 import br.com.escalarte.crudescalarte.model.Cargo;
+import br.com.escalarte.crudescalarte.util.AlertUtils;
 import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -60,17 +62,23 @@ public class CargoMain extends Application {
         interjornadaField.setMaxWidth(150);
 
         Button cadastrar = new Button("Cadastrar");
-        cadastrar.setOnAction(e -> CargoDAO.cadastrar(
-                nomeField.getText(),
-                cargaHorariaField.getText(),
-                interjornadaField.getText()));
+        cadastrar.setOnAction(e -> {
+            CargoDAO.cadastrar(
+                    nomeField.getText(),
+                    cargaHorariaField.getText(),
+                    interjornadaField.getText());
+            atualizarTabela(table);
+        });
 
         Button editar = new Button("Editar");
-        editar.setOnAction(_ -> CargoDAO.editar(
-                table.getSelectionModel().getSelectedItem(),
-                nomeField.getText(),
-                cargaHorariaField.getText(),
-                interjornadaField.getText())
+        editar.setOnAction(_ -> {
+            CargoDAO.editar(
+                    table.getSelectionModel().getSelectedItem(),
+                    nomeField.getText(),
+                    cargaHorariaField.getText(),
+                    interjornadaField.getText());
+            atualizarTabela(table);
+        }
 
         );
 
@@ -83,12 +91,29 @@ public class CargoMain extends Application {
 
         Button excluir = new Button(
                 "Excluir");
-        excluir.setOnAction(_ -> CargoDAO.excluir(table.getSelectionModel().getSelectedItem()));
+        excluir.setOnAction(_ -> {
+            CargoDAO.excluir(table.getSelectionModel().getSelectedItem());
+            atualizarTabela(table);
+        });
 
         Button atualizar = new Button("Atualizar");
-        atualizar.setOnAction(_ -> this.atualizarTabela(table));
+        atualizar.setOnAction(_ -> {
+            this.atualizarTabela(table);
+            AlertUtils.mostrarInfo("Atualização", "Cargos atualizados com sucesso");
+        });
 
         botoesBox.getChildren().addAll(excluir, atualizar);
+
+        // Atualizar dados
+        atualizarTabela(table);
+        table.setOnMouseClicked(event -> {
+            Cargo cargoSelecionado = table.getSelectionModel().getSelectedItem();
+            if (cargoSelecionado != null) {
+                nomeField.setText(cargoSelecionado.getNome());
+                cargaHorariaField.setText(String.valueOf(cargoSelecionado.getCargaHoraria()));
+                interjornadaField.setText(String.valueOf(cargoSelecionado.getInterjornada()));
+            }
+        });
 
         // Layout Principal
         VBox vbox = new VBox(8);
@@ -101,13 +126,9 @@ public class CargoMain extends Application {
     }
 
     private void atualizarTabela(TableView<Cargo> table) {
-        ArrayList<Object> objetos = (ArrayList<Object>) ObjectPersistenceUtils.lerDados(Cargo.NOME_ARQUIVO);
-        ArrayList<Cargo> cargos = new ArrayList<>();
-        for (Object obj : objetos) {
-            if (obj instanceof Cargo) {
-                cargos.add((Cargo) obj);
-            }
+        ArrayList<Cargo> cargos = CargoDAO.atualizar();
+        if (cargos != null && !cargos.isEmpty()) {
+            table.getItems().setAll(cargos);
         }
-        table.getItems().setAll(cargos);
     }
 }
