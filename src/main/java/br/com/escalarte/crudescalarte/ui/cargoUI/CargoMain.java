@@ -19,19 +19,15 @@ public class CargoMain extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Gerenciador de Cargos");
 
-        TableView<Cargo> table = new TableView<>();
-
-        table.setEditable(false);
-
+        // Layout
         VBox vbox = new VBox(8);
-        HBox hbox = new HBox(8);
-        HBox excluirBox = new HBox(8);
-
         vbox.setSpacing(16);
 
-        TextField idField = new TextField();
-        idField.setPromptText("Selecione um ID");
-        idField.setMaxWidth(150);
+        HBox hbox = new HBox(8);
+
+        // Tabela
+        TableView<Cargo> table = new TableView<>();
+        table.setEditable(false);
 
         TableColumn<Cargo, String> idCol = new TableColumn<>("Id");
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -47,22 +43,21 @@ public class CargoMain extends Application {
 
         table.getColumns().addAll(idCol, nomeCol, cargaHorariaCol, interjornadaCol);
 
-        ObjectPersistenceUtils.lerDados("cargos.dat");
-        table.getItems().addAll();
-
+        // Botões
         Button cadastrar = new Button("Cadastrar");
-        Button editar = new Button("Editar");
-        Button excluir = new Button("Excluir");
-        Button atualizar = new Button("Atualizar");
-
         cadastrar.setOnAction(e -> new CargoCadastro().start(new Stage()));
+
+        Button editar = new Button("Editar");
         // editar.setOnAction(e -> new CargoEdit().start(new Stage()));
-        excluir.setOnAction(e -> CargoDAO.excluir(idField.getText()));
+
+        Button excluir = new Button("Excluir");
+        excluir.setOnAction(e -> CargoDAO.excluir(table.getSelectionModel().getSelectedItem()));
+
+        Button atualizar = new Button("Atualizar");
         atualizar.setOnAction(e -> CargoDAO.atualizar(table));
 
+        vbox.getChildren().addAll(table, excluir, hbox);
         hbox.getChildren().addAll(cadastrar, editar, atualizar);
-        excluirBox.getChildren().addAll(idField, excluir);
-        vbox.getChildren().addAll(table, hbox, excluirBox);
 
         Scene scene = new Scene(vbox, 500, 300);
         primaryStage.setScene(scene);

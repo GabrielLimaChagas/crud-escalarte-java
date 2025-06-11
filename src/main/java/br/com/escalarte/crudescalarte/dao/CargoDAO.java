@@ -95,25 +95,17 @@ public class CargoDAO {
         AlertUtils.mostrarInfo("Edição", "Cargo editado com sucesso");
     }
 
-    public static void excluir(String id) {
+    public static void excluir(Cargo cargo) {
         try {
-            int idEscolhido = ValidationUtils.strParaInt(id);
-            boolean encontrado = false;
-
-            for (Cargo cargo : cargos) {
-                if (cargo.getId() == idEscolhido) {
-                    encontrado = true;
-                    cargos.remove(cargo);
-                    ObjectPersistenceUtils.gravarDados(Cargo.NOME_ARQUIVO, cargos);
-                    AlertUtils.mostrarInfo("Exclusão", "Cargo excluído com sucesso");
-                    break;
-                }
+            if (cargo != null) {
+                cargos.remove(cargo);
+                ObjectPersistenceUtils.gravarDados(Cargo.NOME_ARQUIVO, cargos);
+                AlertUtils.mostrarInfo("Exclusão", "Cargo excluído com sucesso");
+                return;
             }
-            if (!encontrado) {
-                throw new Exception();
-            }
+            AlertUtils.mostrarErro("Erro", "Selecione um cargo para excluir");
         } catch (Exception e) {
-            AlertUtils.mostrarErro("Erro", "ID não encontrado");
+            AlertUtils.mostrarErro("Erro", "Erro ao remover cargo");
         }
     }
 
