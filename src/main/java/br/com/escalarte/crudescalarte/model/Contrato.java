@@ -1,57 +1,101 @@
 package br.com.escalarte.crudescalarte.model;
 
-import java.io.Serializable; //permite que objetos dessa classe possam ser salvos em arquivos ou enviados pela rede
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Contrato implements Serializable {
+public class Contrato extends BaseModel implements Serializable {
 
-    //Atributos
-    private String nomeColaborador;
+    private String colaborador;
     private String cargo;
-    private double salarioBase;
-    private int cargaHorariaSemanal;
+    private double cargaHorariaDiaria;
     private String status;
     private LocalDate dataInicio;
-    private LocalDate dataCriacao;
+    private LocalDate dataFim;
+    private int diasTrabalhoSemanal;
+    private int diasTrabalhoMensal;
 
-    //Construtor Não Padrão
-    public Contrato(String nomeColaborador, String cargo, double salarioBase, int cargaHorariaSemanal, String status, LocalDate dataInicio, LocalDate dataCriacao) {
-        this.nomeColaborador = nomeColaborador;
-        this.cargo = cargo;
-        this.salarioBase = salarioBase;
-        this.cargaHorariaSemanal = cargaHorariaSemanal;
+    public Contrato(int id, String status, double cargaHorariaDiaria, String cargo, String colaborador,
+                    LocalDate dataInicio, LocalDate dataFim,
+                    int diasTrabalhoSemanal, int diasTrabalhoMensal) {
+        super(id);
         this.status = status;
+        this.cargaHorariaDiaria = cargaHorariaDiaria;
+        this.cargo = cargo;
+        this.colaborador = colaborador;
         this.dataInicio = dataInicio;
-        this.dataCriacao = dataCriacao;
+        this.dataFim = dataFim;
+        this.diasTrabalhoSemanal = diasTrabalhoSemanal;
+        this.diasTrabalhoMensal = diasTrabalhoMensal;
     }
 
     // Getters e Setters
-    public String getNomeColaborador() { return nomeColaborador; }
-    public void setNomeColaborador(String nomeColaborador) { this.nomeColaborador = nomeColaborador; }
 
-    public String getCargo() { return cargo; }
-    public void setCargo(String cargo) { this.cargo = cargo; }
+    public String getColaborador() {
+        return colaborador;
+    }
 
-    public double getSalarioBase() { return salarioBase; }
-    public void setSalarioBase(double salarioBase) { this.salarioBase = salarioBase; }
+    public void setColaborador(String colaborador) {
+        this.colaborador = colaborador;
+    }
 
-    public int getCargaHorariaSemanal() { return cargaHorariaSemanal; }
-    public void setCargaHorariaSemanal(int cargaHorariaSemanal) { this.cargaHorariaSemanal = cargaHorariaSemanal; }
+    public String getCargo() {
+        return cargo;
+    }
 
-    public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
 
-    public LocalDate getDataInicio() { return dataInicio; }
-    public void setDataInicio(LocalDate dataInicio) { this.dataInicio = dataInicio; }
+    public double getCargaHorariaDiaria() {
+        return cargaHorariaDiaria;
+    }
 
-    public LocalDate getDataCriacao() { return dataCriacao; }
-    public void setDataCriacao(LocalDate dataCriacao) { this.dataCriacao = dataCriacao; }
+    public void setCargaHorariaDiaria(double cargaHorariaDiaria) {
+        this.cargaHorariaDiaria = cargaHorariaDiaria;
+    }
 
-    //Define como o contrato será representado como texto
-    @Override //quando um método é herdado da superclasse
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public LocalDate getDataInicio() {
+        return dataInicio;
+    }
+
+    public void setDataInicio(LocalDate dataInicio) {
+        this.dataInicio = dataInicio;
+    }
+
+    public LocalDate getDataFim() {
+        return dataFim;
+    }
+
+    public void setDataFim(LocalDate dataFim) {
+        this.dataFim = dataFim;
+    }
+
+    public int getDiasTrabalhoSemanal() {
+        return diasTrabalhoSemanal;
+    }
+
+    public void setDiasTrabalhoSemanal(int diasTrabalhoSemanal) {
+        this.diasTrabalhoSemanal = diasTrabalhoSemanal;
+    }
+
+    public int getDiasTrabalhoMensal() {
+        return diasTrabalhoMensal;
+    }
+
+    public void setDiasTrabalhoMensal(int diasTrabalhoMensal) {
+        this.diasTrabalhoMensal = diasTrabalhoMensal;
+    }
+
+    @Override
     public String toString() {
-        return nomeColaborador + " - " + cargo + " - " + status;
+        return colaborador + " - " + cargo + " - " + status;
     }
 }
-
-

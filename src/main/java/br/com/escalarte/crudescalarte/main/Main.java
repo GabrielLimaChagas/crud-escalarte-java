@@ -1,6 +1,7 @@
 package br.com.escalarte.crudescalarte.main;
 
 import br.com.escalarte.crudescalarte.ui.cargoUI.CargoMain;
+import br.com.escalarte.crudescalarte.ui.contratoUI.ContratoMain;
 import br.com.escalarte.crudescalarte.ui.setorUI.SetorMain;
 import br.com.escalarte.crudescalarte.ui.turnoUI.TurnoMain;
 import javafx.application.Application;
@@ -11,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    @Override //Sobrescreve o método start, que é executado quando a aplicação JavaFX inicia
+    @Override
     public void start(Stage stage) {
 
         //Criação dos botões no menu
@@ -23,7 +24,7 @@ public class Main extends Application {
 
         // Abrem janelas específicas quando os botões são clicados
 
-        // btnContrato.setOnAction(e -> new ContratoUI().start(new Stage()));
+        btnContrato.setOnAction(e -> new ContratoMain().start(new Stage()));
         btnCargo.setOnAction(e -> new CargoMain().start(new Stage()));
         // btnColaborador.setOnAction(e -> new ColaboradorUI().start(new Stage()));
         btnSetor.setOnAction(e -> new SetorMain().start(new Stage()));
