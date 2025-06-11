@@ -61,8 +61,8 @@ public class SetorMain {
         apagar.setOnAction(_ -> SetorDAO.apagar(idField.getText()));
         atualizar.setOnAction(_ -> SetorDAO.atualizar(table));
 
-        hbox.getChildren().addAll(cadastrar, editar, atualizar);
-        excluirBox.getChildren().addAll(idField, apagar);
+        hbox.getChildren().addAll(cadastrar, editar, atualizar, idField, apagar);
+        //excluirBox.getChildren().addAll();
         vbox.getChildren().addAll(table, hbox, excluirBox);
 
         Scene scene = new Scene(vbox, 450, 450);

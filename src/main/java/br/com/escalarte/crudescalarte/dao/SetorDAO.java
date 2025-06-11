@@ -31,8 +31,13 @@ public class SetorDAO {
             return;
         }
 
-        if (nomeSetor.length() < 4 || nomeSetor.length() > 50) {
+        if (nomeSetor.length() < 1 || nomeSetor.length() > 20) {
             AlertUtils.mostrarErro("Erro", "O nome do setor deve ter entre 1 e 20 caracteres");
+            return;
+        }
+
+        if (nomeGerente.length() < 1 || nomeGerente.length() > 20) {
+            AlertUtils.mostrarErro("Erro", "O nome do gerente deve ter entre 1 e 20 caracteres");
             return;
         }
 
@@ -49,6 +54,19 @@ public class SetorDAO {
                 AlertUtils.mostrarErro("Erro", "Gerente já cadastrado em outro setor");
                 return;
             }
+            if (id == null || id.trim().isEmpty()) {
+                AlertUtils.mostrarErro("Erro", "Você deve digitar o id do item cadastrado");
+                return;
+            }
+            if (nomeGerente == null || nomeGerente.trim().isEmpty()) {
+                AlertUtils.mostrarErro("Erro", "O nome do gerente não pode estar vazio");
+                return;
+            }
+            if (quantidadeColaboradores == null || quantidadeColaboradores.trim().isEmpty()) {
+                AlertUtils.mostrarErro("Erro", "O campo Quantidade de Colaboradores deve ser preenchido");
+                return;
+            }
+
 
         }
 
@@ -74,18 +92,17 @@ public class SetorDAO {
         }
 
         for (Setor setor : setores) {
-            if (setor.getId() == novoId) {
-                AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
-                return;
-            }
+
             if (setor.getNomeSetor().equals(nomeSetor)) {
                 AlertUtils.mostrarErro("Erro", "Existe um setor com o mesmo nome");
                 return;
             }
-            if (setor.getNomeGerente().equals(nomeGerente)) {
-                AlertUtils.mostrarErro("Erro", "Gerente já cadastrado em outro setor");
+
+            if (nomeGerente == null || nomeGerente.trim().isEmpty()) {
+                AlertUtils.mostrarErro("Erro", "O nome do gerente não pode estar vazio");
                 return;
             }
+
         }
 
         for (Setor setorExistente : setores) {
