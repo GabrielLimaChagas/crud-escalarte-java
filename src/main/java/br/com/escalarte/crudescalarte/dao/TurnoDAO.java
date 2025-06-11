@@ -109,6 +109,11 @@ public class TurnoDAO {
             return;
         }
 
+        if (novoHorarioFim.isBefore(novoHorarioInicio)) {
+            AlertUtils.mostrarErro("Erro", "Turno Inicio deve ser antes do Turno Final");
+            return;
+        }
+
         for (Turno turnoExistente : turnos) {
             if (turnoExistente.getId() == novoId) {
                 for (Turno outroTurno : turnos) {
