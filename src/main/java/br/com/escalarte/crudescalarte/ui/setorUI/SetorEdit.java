@@ -41,9 +41,9 @@ public class SetorEdit {
         nomeGerenteField.setPromptText("Nome do Gerente ");
         nomeGerenteField.setMaxWidth(150);
 
-        Label quantidadeColaboradoresLabel = new Label("Horário Fim:");
+        Label quantidadeColaboradoresLabel = new Label("Quantidade de Colaboradores");
         TextField quantidadeColaboradoresField = new TextField();
-        quantidadeColaboradoresField.setPromptText("Horário Fim (HH/mm)");
+        quantidadeColaboradoresField.setPromptText("Quantidade de Colaboradores");
         quantidadeColaboradoresField.setMaxWidth(150);
 
         Button editar = new Button("Editar");
