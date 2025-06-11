@@ -24,7 +24,7 @@ public class ContratoMain {
         TableColumn<Contrato, Integer> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        TableColumn<Contrato, String> colaboradorCol = new TableColumn<>("Colaborador");
+        TableColumn<Contrato, String> colaboradorCol = new TableColumn<>("Nome do Colaborador");
         colaboradorCol.setCellValueFactory(new PropertyValueFactory<>("colaborador"));
 
         TableColumn<Contrato, String> statusCol = new TableColumn<>("Status");
@@ -33,16 +33,22 @@ public class ContratoMain {
         TableColumn<Contrato, Double> cargaCol = new TableColumn<>("Carga Diária");
         cargaCol.setCellValueFactory(new PropertyValueFactory<>("cargaHorariaDiaria"));
 
-        TableColumn<Contrato, String> cargoCol = new TableColumn<>("Cargo");
+        TableColumn<Contrato, String> cargoCol = new TableColumn<>("Cargo atribuído");
         cargoCol.setCellValueFactory(new PropertyValueFactory<>("cargo"));
 
-        TableColumn<Contrato, String> inicioCol = new TableColumn<>("Início");
+        TableColumn<Contrato, String> inicioCol = new TableColumn<>("Início do Contrato");
         inicioCol.setCellValueFactory(new PropertyValueFactory<>("dataInicio"));
 
-        TableColumn<Contrato, String> fimCol = new TableColumn<>("Fim");
+        TableColumn<Contrato, String> fimCol = new TableColumn<>("Fim do Contrato");
         fimCol.setCellValueFactory(new PropertyValueFactory<>("dataFim"));
 
-        table.getColumns().addAll(idCol, colaboradorCol, statusCol, cargaCol, cargoCol, inicioCol, fimCol);
+        TableColumn<Contrato, Integer> semanaCol = new TableColumn<>("Dias Semanais de trabalho");
+        semanaCol.setCellValueFactory(new PropertyValueFactory<>("diasTrabalhoSemanal"));
+
+        TableColumn<Contrato, Integer> mensalCol = new TableColumn<>("Dias Mensais de trabalho");
+        mensalCol.setCellValueFactory(new PropertyValueFactory<>("diasTrabalhoMensal"));
+
+        table.getColumns().addAll(idCol, colaboradorCol, statusCol, cargaCol, cargoCol, inicioCol, fimCol, semanaCol, mensalCol);
 
         ObjectPersistenceUtils.lerDados("contratos.dat", ContratoDAO.getContratos());
         table.getItems().addAll(ContratoDAO.getContratos());
