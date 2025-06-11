@@ -28,6 +28,13 @@ public class TurnoDAO {
             return;
         }
 
+        try {
+            ValidationUtils.validarNome(nome);
+        } catch (IllegalArgumentException e) {
+            AlertUtils.mostrarErro("Erro", "Nome inválido. Use apenas letras de A a Z (maiúsculas ou minúsculas).");
+            return;
+        }
+
         if (nome.length() < 4 || nome.length() > 50) {
             AlertUtils.mostrarErro("Erro", "O nome deve ter entre 4 a 50 caracteres");
             return;
@@ -39,6 +46,11 @@ public class TurnoDAO {
         }
         LocalTime novoHorarioFim = ValidationUtils.strParaLocalTime(horarioFim);
         if (novoHorarioFim.equals(LocalTime.of(0, 0))) {
+            return;
+        }
+
+        if (novoHorarioFim.isBefore(novoHorarioInicio)) {
+            AlertUtils.mostrarErro("Erro", "Turno Inicio deve ser antes do Turno Final");
             return;
         }
 
@@ -74,42 +86,65 @@ public class TurnoDAO {
         if (novoId <= 0) {
             return;
         }
+
+        try {
+            ValidationUtils.validarNome(nome);
+        } catch (IllegalArgumentException e) {
+            AlertUtils.mostrarErro("Erro", "Nome inválido. Use apenas letras de A a Z (maiúsculas ou minúsculas).");
+            return;
+        }
+
+        if (nome.length() < 4 || nome.length() > 50) {
+            AlertUtils.mostrarErro("Erro", "O nome deve ter entre 4 a 50 caracteres");
+            return;
+        }
+
         LocalTime novoHorarioInicio = ValidationUtils.strParaLocalTime(horarioInicio);
         if (novoHorarioInicio.equals(LocalTime.of(0, 0))) {
             return;
         }
+
         LocalTime novoHorarioFim = ValidationUtils.strParaLocalTime(horarioFim);
         if (novoHorarioFim.equals(LocalTime.of(0, 0))) {
             return;
         }
 
-        for (Turno turno : turnos) {
-            if (turno.getId() == novoId) {
-                AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
-                return;
-            }
-            if (turno.getNome().equals(nome)) {
-                AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
-                return;
-            }
-            if (turno.getHorarioFim().equals(novoHorarioFim) && turno.getHorarioInicio().equals(novoHorarioInicio)) {
-                AlertUtils.mostrarErro("Erro", "Há um turno com este horário já existente no sistema");
-                return;
-            }
+        if (novoHorarioFim.isBefore(novoHorarioInicio)) {
+            AlertUtils.mostrarErro("Erro", "Turno Inicio deve ser antes do Turno Final");
+            return;
         }
-
 
         for (Turno turnoExistente : turnos) {
             if (turnoExistente.getId() == novoId) {
+                for (Turno outroTurno : turnos) {
+                    if (outroTurno == turnoExistente) continue;
+
+                    if (outroTurno.getId() == novoId) {
+                        AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
+                        return;
+                    }
+
+                    if (outroTurno.getNome().equals(nome)) {
+                        AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
+                        return;
+                    }
+
+                    if (outroTurno.getHorarioFim().equals(novoHorarioFim) &&
+                            outroTurno.getHorarioInicio().equals(novoHorarioInicio)) {
+                        AlertUtils.mostrarErro("Erro", "Há um turno com este horário já existente no sistema");
+                        return;
+                    }
+                }
+
                 turnoExistente.setNome(nome);
                 turnoExistente.setHorarioInicio(novoHorarioInicio);
                 turnoExistente.setHorarioFim(novoHorarioFim);
-                break;
+
+                ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
+                AlertUtils.mostrarInfo("Edição", "Turno editado com sucesso");
+                return;
             }
         }
-
-        ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
-        AlertUtils.mostrarInfo("Edição", "Turno editado com sucesso");
     }
 
     public static void excluir(String id) {

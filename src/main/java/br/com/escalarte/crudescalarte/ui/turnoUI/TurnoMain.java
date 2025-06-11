@@ -43,6 +43,8 @@ public class TurnoMain {
         horarioFimCol.setCellValueFactory(new PropertyValueFactory<>("horarioFim"));
 
         table.getColumns().addAll(idCol, nomeCol, horarioInicioCol, horarioFimCol);
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
 
         ObjectPersistenceUtils.lerDados("turnos.dat", TurnoDAO.getTurnos());
         table.getItems().addAll(TurnoDAO.getTurnos());
