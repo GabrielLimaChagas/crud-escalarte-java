@@ -60,11 +60,15 @@ public class CargoDAO {
     }
 
     public static void editar(
-            String id,
+            Cargo cargoParaEditar,
             String nomeStr,
             String cargaHorariaStr,
             String interjornadaStr) {
-        int idInt = ValidationUtils.strParaInt(id);
+        if (cargoParaEditar == null) {
+            AlertUtils.mostrarErro("Erro", "Selecione um cargo para editar");
+            return;
+        }
+        int id = cargoParaEditar.getId();
 
         if (nomeStr.length() < 4 || nomeStr.length() > 50) {
             AlertUtils.mostrarErro("Erro", "O nome deve ter entre 4 a 50 caracteres");
@@ -87,7 +91,7 @@ public class CargoDAO {
         }
 
         for (Cargo cargoExistente : cargos) {
-            if (cargoExistente.getId() == idInt) {
+            if (cargoExistente.getId() == id) {
                 cargoExistente.setNome(nomeStr);
                 cargoExistente.setCargaHoraria(cargaHoraria);
                 cargoExistente.setInterjornada(interjornada);

@@ -1,5 +1,7 @@
 package br.com.escalarte.crudescalarte.ui.cargoUI;
 
+import java.util.ArrayList;
+
 import br.com.escalarte.crudescalarte.dao.CargoDAO;
 import br.com.escalarte.crudescalarte.model.Cargo;
 import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
@@ -19,6 +21,24 @@ public class CargoMain extends Application {
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Gerenciador de Cargos");
+
+        // Tabela
+        TableView<Cargo> table = new TableView<>();
+        table.setEditable(false);
+
+        TableColumn<Cargo, String> idCol = new TableColumn<>("Id");
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+
+        TableColumn<Cargo, String> nomeCol = new TableColumn<>("Nome");
+        nomeCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
+
+        TableColumn<Cargo, String> cargaHorariaCol = new TableColumn<>("Carga Horária");
+        cargaHorariaCol.setCellValueFactory(new PropertyValueFactory<>("cargaHoraria"));
+
+        TableColumn<Cargo, String> interjornadaCol = new TableColumn<>("Interjornada");
+        interjornadaCol.setCellValueFactory(new PropertyValueFactory<>("interjornada"));
+
+        table.getColumns().addAll(idCol, nomeCol, cargaHorariaCol, interjornadaCol);
 
         // Formulário
         VBox formularioBox = new VBox(8);
@@ -46,38 +66,27 @@ public class CargoMain extends Application {
                 interjornadaField.getText()));
 
         Button editar = new Button("Editar");
-        // editar.setOnAction(e -> new CargoEdit().start(new Stage()));
+        editar.setOnAction(_ -> CargoDAO.editar(
+                table.getSelectionModel().getSelectedItem(),
+                nomeField.getText(),
+                cargaHorariaField.getText(),
+                interjornadaField.getText())
+
+        );
 
         botoesFormularioBox.getChildren().addAll(cadastrar, editar);
         formularioBox.getChildren().addAll(nomeLabel, nomeField, cargaHorariaLabel, cargaHorariaField,
                 interjornadaLabel, interjornadaField, botoesFormularioBox);
 
-        // Tabela
-        TableView<Cargo> table = new TableView<>();
-        table.setEditable(false);
-
-        TableColumn<Cargo, String> idCol = new TableColumn<>("Id");
-        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-        TableColumn<Cargo, String> nomeCol = new TableColumn<>("Nome");
-        nomeCol.setCellValueFactory(new PropertyValueFactory<>("nome"));
-
-        TableColumn<Cargo, String> cargaHorariaCol = new TableColumn<>("Carga Horária");
-        cargaHorariaCol.setCellValueFactory(new PropertyValueFactory<>("cargaHoraria"));
-
-        TableColumn<Cargo, String> interjornadaCol = new TableColumn<>("Interjornada");
-        interjornadaCol.setCellValueFactory(new PropertyValueFactory<>("interjornada"));
-
-        table.getColumns().addAll(idCol, nomeCol, cargaHorariaCol, interjornadaCol);
-
         // Botões de Excluir e Atualizar
         HBox botoesBox = new HBox(8);
 
-        Button excluir = new Button("Excluir");
-        excluir.setOnAction(e -> CargoDAO.excluir(table.getSelectionModel().getSelectedItem()));
+        Button excluir = new Button(
+                "Excluir");
+        excluir.setOnAction(_ -> CargoDAO.excluir(table.getSelectionModel().getSelectedItem()));
 
         Button atualizar = new Button("Atualizar");
-        atualizar.setOnAction(e -> CargoDAO.atualizar(table));
+        atualizar.setOnAction(_ -> this.atualizarTabela(table));
 
         botoesBox.getChildren().addAll(excluir, atualizar);
 
@@ -89,5 +98,16 @@ public class CargoMain extends Application {
         Scene scene = new Scene(vbox, 500, 400);
         primaryStage.setScene(scene);
         primaryStage.show();
+    }
+
+    private void atualizarTabela(TableView<Cargo> table) {
+        ArrayList<Object> objetos = (ArrayList<Object>) ObjectPersistenceUtils.lerDados(Cargo.NOME_ARQUIVO);
+        ArrayList<Cargo> cargos = new ArrayList<>();
+        for (Object obj : objetos) {
+            if (obj instanceof Cargo) {
+                cargos.add((Cargo) obj);
+            }
+        }
+        table.getItems().setAll(cargos);
     }
 }
