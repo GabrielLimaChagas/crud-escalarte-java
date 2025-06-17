@@ -135,11 +135,4 @@ public class CargoDAO {
             return null;
         }
     }
-
-    public static void limpar(TextField id, TextField nome, TextField horarioInicio, TextField horarioFim) {
-        id.clear();
-        nome.clear();
-        horarioInicio.clear();
-        horarioFim.clear();
-    }
 }

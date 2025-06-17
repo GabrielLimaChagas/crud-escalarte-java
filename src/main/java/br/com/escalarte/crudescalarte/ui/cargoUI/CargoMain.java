@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import br.com.escalarte.crudescalarte.dao.CargoDAO;
 import br.com.escalarte.crudescalarte.model.Cargo;
 import br.com.escalarte.crudescalarte.util.AlertUtils;
-import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -61,6 +59,7 @@ public class CargoMain extends Application {
         interjornadaField.setPromptText("");
         interjornadaField.setMaxWidth(150);
 
+
         Button cadastrar = new Button("Cadastrar");
         cadastrar.setOnAction(e -> {
             CargoDAO.cadastrar(
@@ -68,6 +67,7 @@ public class CargoMain extends Application {
                     cargaHorariaField.getText(),
                     interjornadaField.getText());
             atualizarTabela(table);
+            limparFormulario(nomeField, cargaHorariaField, interjornadaField);
         });
 
         Button editar = new Button("Editar");
@@ -78,6 +78,7 @@ public class CargoMain extends Application {
                     cargaHorariaField.getText(),
                     interjornadaField.getText());
             atualizarTabela(table);
+            limparFormulario(nomeField, cargaHorariaField, interjornadaField);
         }
 
         );
@@ -130,5 +131,11 @@ public class CargoMain extends Application {
         if (cargos != null && !cargos.isEmpty()) {
             table.getItems().setAll(cargos);
         }
+    }
+
+    private void limparFormulario(TextField nomeField, TextField cargaHorariaField, TextField interjornadaField) {
+        nomeField.clear();
+        cargaHorariaField.clear();
+        interjornadaField.clear();
     }
 }
