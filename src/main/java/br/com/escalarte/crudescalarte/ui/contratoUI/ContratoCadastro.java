@@ -1,6 +1,8 @@
 package br.com.escalarte.crudescalarte.ui.contratoUI;
 
 import br.com.escalarte.crudescalarte.dao.ContratoDAO;
+import br.com.escalarte.crudescalarte.model.Contrato;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -10,6 +12,12 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class ContratoCadastro {
+    private ObservableList<Contrato> contratosList;
+
+    public ContratoCadastro(ObservableList<Contrato> contratosList) {
+        this.contratosList = contratosList;
+    }
+
     public void start(Stage primaryStage) {
         // Inicializa a janela de cadastro de contrato
         primaryStage.setTitle("Cadastro de Contratos");
@@ -53,17 +61,21 @@ public class ContratoCadastro {
         Button cadastrar = new Button("Cadastrar");
         Button limpar = new Button("Limpar");
 
-        cadastrar.setOnAction(_ -> ContratoDAO.cadastrar(
-                idField.getText(),
-                statusField.getText(),
-                cargaDiariaField.getText(),
-                cargoField.getText(),
-                colaboradorField.getText(),
-                dataInicioField.getText(),
-                dataFimField.getText(),
-                diasSemanaisField.getText(),
-                diasMensaisField.getText()
-        ));
+        cadastrar.setOnAction(_ -> {
+            ContratoDAO.cadastrar(
+                    idField.getText(),
+                    statusField.getText(),
+                    cargaDiariaField.getText(),
+                    cargoField.getText(),
+                    colaboradorField.getText(),
+                    dataInicioField.getText(),
+                    dataFimField.getText(),
+                    diasSemanaisField.getText(),
+                    diasMensaisField.getText());
+
+            contratosList.setAll(ContratoDAO.getContratos());
+            primaryStage.close();
+        });
 
         limpar.setOnAction(_ -> {
             ContratoDAO.limpar(

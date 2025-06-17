@@ -2,6 +2,8 @@ package br.com.escalarte.crudescalarte.ui.contratoUI;
 
 import br.com.escalarte.crudescalarte.dao.ContratoDAO;
 import br.com.escalarte.crudescalarte.model.Contrato;
+import br.com.escalarte.crudescalarte.model.Turno;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -11,6 +13,12 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class ContratoEdit {
+    private ObservableList<Contrato> contratosList;
+
+    public ContratoEdit(ObservableList<Contrato> contratosList) {
+        this.contratosList = contratosList;
+    }
+
     public void start(Stage primaryStage, Contrato contratoSelecionado) {
         primaryStage.setTitle("Editar Contrato");
 
@@ -76,6 +84,7 @@ public class ContratoEdit {
                     diasSemanaisField.getText(),
                     diasMensaisField.getText()
             );
+            contratosList.setAll(ContratoDAO.getContratos());
             primaryStage.close();
         });
 

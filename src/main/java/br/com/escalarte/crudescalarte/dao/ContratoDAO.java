@@ -12,9 +12,6 @@ import java.util.ArrayList;
 
 public class ContratoDAO {
 
-    // Classe responsável por gerenciar os contratos.
-    // Contém métodos para cadastrar, editar, excluir e atualizar contratos.
-
     public static int gerarNovoId() {
         return contratos.stream()
                 .mapToInt(Contrato::getId)
@@ -30,7 +27,6 @@ public class ContratoDAO {
 
     public static void cadastrar( String id,  String status, String cargaHorariaDiaria, String cargo, String colaborador, String dataInicio, String dataFim, String diasTrabalhoSemanal, String diasTrabalhoMensal) {
 
-        // Verificações de campos obrigatórios
         if (ValidationUtils.campoVazio(id) || ValidationUtils.campoVazio(status) ||
                 ValidationUtils.campoVazio(cargaHorariaDiaria) || ValidationUtils.campoVazio(cargo) ||
                 ValidationUtils.campoVazio(colaborador) || ValidationUtils.campoVazio(dataInicio) ||

@@ -1,8 +1,12 @@
 package br.com.escalarte.crudescalarte.ui.contratoUI;
 
+import br.com.escalarte.crudescalarte.dao.ColaboradorDAO;
 import br.com.escalarte.crudescalarte.dao.ContratoDAO;
+import br.com.escalarte.crudescalarte.model.Colaborador;
 import br.com.escalarte.crudescalarte.model.Contrato;
 import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -11,6 +15,7 @@ import javafx.stage.Stage;
 
 public class ContratoMain {
     public void start(Stage primaryStage) {
+
         primaryStage.setTitle("Gerenciador de Contratos");
 
         TableView<Contrato> table = new TableView<>();
@@ -53,25 +58,30 @@ public class ContratoMain {
         ObjectPersistenceUtils.lerDados("contratos.dat", ContratoDAO.getContratos());
         table.getItems().addAll(ContratoDAO.getContratos());
 
+        ObservableList<Contrato> contratosList = FXCollections.observableArrayList(ContratoDAO.getContratos());
+        table.setItems(contratosList);
+
         Button cadastrar = new Button("Cadastrar");
         Button editar = new Button("Editar");
         Button excluir = new Button("Excluir");
         Button atualizar = new Button("Atualizar");
 
-        cadastrar.setOnAction(_ -> new ContratoCadastro().start(new Stage()));
+        cadastrar.setOnAction(_ -> new ContratoCadastro(contratosList).start(new Stage()));
         editar.setOnAction(_ -> {
             Contrato selecionado = table.getSelectionModel().getSelectedItem();
             if (selecionado != null) {
-                new ContratoEdit().start(new Stage(), selecionado);
+                new ContratoEdit(contratosList).start(new Stage(), selecionado);
             } else {
                 Alert alerta = new Alert(Alert.AlertType.WARNING, "Selecione um contrato para editar.");
                 alerta.showAndWait();
             }
         });
-        excluir.setOnAction(_ -> ContratoDAO.excluir(idField.getText()));
-        atualizar.setOnAction(_ -> ContratoDAO.atualizar(table));
+        excluir.setOnAction(_ -> {
+            ContratoDAO.excluir(idField.getText());
+            contratosList.setAll(ContratoDAO.getContratos());
+        });
 
-        botoesBox.getChildren().addAll(cadastrar, editar, atualizar);
+        botoesBox.getChildren().addAll(cadastrar, editar);
         excluirBox.getChildren().addAll(idField, excluir);
         vbox.getChildren().addAll(table, botoesBox, excluirBox);
 
