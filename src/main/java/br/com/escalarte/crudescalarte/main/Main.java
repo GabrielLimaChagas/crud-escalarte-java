@@ -17,7 +17,7 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) {
 
-        //Criação dos botões no menu
+        // Criação dos botões no menu
         Button btnContrato = new Button("Gerenciar Contratos");
         Button btnCargo = new Button("Gerenciar Cargos");
         Button btnColaborador = new Button("Gerenciar Colaboradores");
@@ -27,13 +27,20 @@ public class Main extends Application {
         // Abrem janelas específicas quando os botões são clicados
 
         btnContrato.setOnAction(e -> new ContratoMain().start(new Stage()));
-        btnCargo.setOnAction(e -> new CargoMain().start(new Stage()));
+        btnCargo.setOnAction(e -> {
+            // new CargoMain().start(new Stage());
+            Stage cargoStage = new Stage();
+            cargoStage.initModality(Modality.APPLICATION_MODAL);
+            cargoStage.setTitle("Gerenciador de Cargos");
+            new CargoMain().start(cargoStage);
+            cargoStage.showAndWait();
+        });
         btnColaborador.setOnAction(e -> {
-                Stage colaboradorStage = new Stage();
-                colaboradorStage.initModality(Modality.APPLICATION_MODAL);
-                colaboradorStage.setTitle("Gerenciador de Turnos");
-                new ColaboradorMain().start(colaboradorStage);
-                colaboradorStage.showAndWait();
+            Stage colaboradorStage = new Stage();
+            colaboradorStage.initModality(Modality.APPLICATION_MODAL);
+            colaboradorStage.setTitle("Gerenciador de Turnos");
+            new ColaboradorMain().start(colaboradorStage);
+            colaboradorStage.showAndWait();
         });
         btnSetor.setOnAction(e -> new SetorMain().start(new Stage()));
         btnTurno.setOnAction(e -> {
@@ -42,7 +49,8 @@ public class Main extends Application {
             new TurnoMain().start(turnoStage);
             turnoStage.showAndWait();
         });
-        //VBox é um layout que organiza os botões verticalmente com espaçamento de 10 pixels
+        // VBox é um layout que organiza os botões verticalmente com espaçamento de 10
+        // pixels
         VBox layout = new VBox(10, btnContrato, btnCargo, btnColaborador, btnSetor, btnTurno);
         layout.setAlignment(Pos.CENTER);
         Scene scene = new Scene(layout, 300, 250);
@@ -52,6 +60,7 @@ public class Main extends Application {
     }
 
     public static void main(String[] args) {
-        launch(args); // Chama launch(args), que inicializa o JavaFX e chama automaticamente o método start()
+        launch(args); // Chama launch(args), que inicializa o JavaFX e chama automaticamente o método
+                      // start()
     }
 }
