@@ -40,9 +40,4 @@ public class Cargo extends BaseModel {
     public void setInterjornada(Integer intervaloInterjornada) {
         this.interjornada = intervaloInterjornada;
     }
-
-    public Cargo(int id) {
-        super(id);
-        super.getId();
-    }
 }
