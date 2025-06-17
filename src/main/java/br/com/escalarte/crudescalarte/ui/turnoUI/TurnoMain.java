@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 
@@ -56,8 +57,21 @@ public class TurnoMain {
         Button editar = new Button("Editar");
         Button excluir = new Button("Excluir");
 
-        cadastrar.setOnAction(_ -> new TurnoCadastro(turnosList).start(new Stage()));
-        editar.setOnAction(_ -> new TurnoEdit(turnosList).start(new Stage()));
+        cadastrar.setOnAction(_ -> {
+            Stage modalStage = new Stage();
+            modalStage.initModality(Modality.APPLICATION_MODAL);
+            modalStage.setTitle("Cadastro de Turnos");
+            new TurnoCadastro(turnosList).start(modalStage);
+            modalStage.showAndWait();
+        });
+
+        editar.setOnAction(_ -> {
+            Stage modalStage = new Stage();
+            modalStage.initModality(Modality.APPLICATION_MODAL);
+            modalStage.setTitle("Editar Turno");
+            new TurnoEdit(turnosList).start(modalStage);
+            modalStage.showAndWait();
+        });
         excluir.setOnAction(_ -> {
             TurnoDAO.excluir(idField.getText());
             turnosList.setAll(TurnoDAO.getTurnos());
@@ -69,6 +83,5 @@ public class TurnoMain {
 
         Scene scene = new Scene(vbox, 750, 450);
         primaryStage.setScene(scene);
-        primaryStage.show();
     }
 }

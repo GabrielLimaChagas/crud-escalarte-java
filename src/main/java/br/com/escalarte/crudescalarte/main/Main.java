@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -28,8 +29,13 @@ public class Main extends Application {
         btnCargo.setOnAction(e -> new CargoMain().start(new Stage()));
         // btnColaborador.setOnAction(e -> new ColaboradorUI().start(new Stage()));
         btnSetor.setOnAction(e -> new SetorMain().start(new Stage()));
-        btnTurno.setOnAction(e -> new TurnoMain().start(new Stage()));
-
+        btnTurno.setOnAction(e -> {
+            Stage turnoStage = new Stage();
+            turnoStage.initModality(Modality.APPLICATION_MODAL);
+            turnoStage.setTitle("Gerenciador de Turnos");
+            new TurnoMain().start(turnoStage);
+            turnoStage.showAndWait();
+        });
         //VBox é um layout que organiza os botões verticalmente com espaçamento de 10 pixels
         VBox layout = new VBox(10, btnContrato, btnCargo, btnColaborador, btnSetor, btnTurno);
         layout.setAlignment(Pos.CENTER);

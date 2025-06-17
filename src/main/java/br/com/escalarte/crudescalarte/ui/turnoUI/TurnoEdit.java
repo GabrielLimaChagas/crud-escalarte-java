@@ -75,6 +75,5 @@ public class TurnoEdit {
 
         Scene scene = new Scene(vbox, 500, 300);
         primaryStage.setScene(scene);
-        primaryStage.show();
     }
 }
