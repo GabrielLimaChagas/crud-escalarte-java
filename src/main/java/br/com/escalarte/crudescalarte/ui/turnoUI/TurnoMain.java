@@ -4,6 +4,8 @@ import br.com.escalarte.crudescalarte.dao.TurnoDAO;
 import br.com.escalarte.crudescalarte.model.Turno;
 import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -47,19 +49,21 @@ public class TurnoMain {
 
 
         ObjectPersistenceUtils.lerDados("turnos.dat", TurnoDAO.getTurnos());
-        table.getItems().addAll(TurnoDAO.getTurnos());
+        ObservableList<Turno> turnosList = FXCollections.observableArrayList(TurnoDAO.getTurnos());
+        table.setItems(turnosList);
 
         Button cadastrar = new Button("Cadastrar");
         Button editar = new Button("Editar");
         Button excluir = new Button("Excluir");
-        Button atualizar = new Button("Atualizar");
 
-        cadastrar.setOnAction(_ -> new TurnoCadastro().start(new Stage()));
-        editar.setOnAction(_ -> new TurnoEdit().start(new Stage()));
-        excluir.setOnAction(_ -> TurnoDAO.excluir(idField.getText()));
-        atualizar.setOnAction(_ -> TurnoDAO.atualizar(table));
+        cadastrar.setOnAction(_ -> new TurnoCadastro(turnosList).start(new Stage()));
+        editar.setOnAction(_ -> new TurnoEdit(turnosList).start(new Stage()));
+        excluir.setOnAction(_ -> {
+            TurnoDAO.excluir(idField.getText());
+            turnosList.setAll(TurnoDAO.getTurnos());
+        });
 
-        hbox.getChildren().addAll(cadastrar, editar, atualizar);
+        hbox.getChildren().addAll(cadastrar, editar);
         excluirBox.getChildren().addAll(idField, excluir);
         vbox.getChildren().addAll(table, hbox, excluirBox);
 

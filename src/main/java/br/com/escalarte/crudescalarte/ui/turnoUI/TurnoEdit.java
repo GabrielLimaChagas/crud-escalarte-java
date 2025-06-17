@@ -1,6 +1,8 @@
 package br.com.escalarte.crudescalarte.ui.turnoUI;
 
 import br.com.escalarte.crudescalarte.dao.TurnoDAO;
+import br.com.escalarte.crudescalarte.model.Turno;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,6 +15,12 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class TurnoEdit {
+    private ObservableList<Turno> turnosList;
+
+    public TurnoEdit(ObservableList<Turno> turnosList) {
+        this.turnosList = turnosList;
+    }
+
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Edit de Turnos");
 
@@ -48,14 +56,15 @@ public class TurnoEdit {
         Button editar = new Button("Editar");
         Button limpar = new Button("Limpar");
 
-        editar.setOnAction(_ ->
-
+        editar.setOnAction(_ -> {
             TurnoDAO.editar(
                     idField.getText(),
                     nomeField.getText(),
                     horarioInicioField.getText(),
-                    horarioFimField.getText())
-            );
+                    horarioFimField.getText());
+            turnosList.setAll(TurnoDAO.getTurnos());
+            primaryStage.close();
+    });
 
         limpar.setOnAction(_ ->
                 TurnoDAO.limpar(idField, nomeField, horarioInicioField, horarioFimField)
