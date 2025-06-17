@@ -28,7 +28,13 @@ public class Main extends Application {
 
         btnContrato.setOnAction(e -> new ContratoMain().start(new Stage()));
         btnCargo.setOnAction(e -> new CargoMain().start(new Stage()));
-        btnColaborador.setOnAction(e -> new ColaboradorMain().start(new Stage()));
+        btnColaborador.setOnAction(e -> {
+                Stage colaboradorStage = new Stage();
+                colaboradorStage.initModality(Modality.APPLICATION_MODAL);
+                colaboradorStage.setTitle("Gerenciador de Turnos");
+                new ColaboradorMain().start(colaboradorStage);
+                colaboradorStage.showAndWait();
+        });
         btnSetor.setOnAction(e -> new SetorMain().start(new Stage()));
         btnTurno.setOnAction(e -> {
             Stage turnoStage = new Stage();

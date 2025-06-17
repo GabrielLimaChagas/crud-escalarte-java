@@ -1,6 +1,7 @@
 package br.com.escalarte.crudescalarte.dao;
 
 import br.com.escalarte.crudescalarte.model.Colaborador;
+import br.com.escalarte.crudescalarte.model.Turno;
 import br.com.escalarte.crudescalarte.util.AlertUtils;
 import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
 import br.com.escalarte.crudescalarte.util.ValidationUtils;
@@ -18,27 +19,30 @@ public class ColaboradorDAO {
         return colaboradores;
     }
 
-    public static void cadastrar(
-            String id,
-            String nome,
-            String senha,
-            String dataNascimento) {
-
-        int novoId = ValidationUtils.strParaInt(id);
-        if (novoId <= 0) {
-            return;
+    private static int gerarNovoId() {
+        if (colaboradores.isEmpty()) {
+            return 1;
         }
+        return colaboradores.stream()
+                .mapToInt(Colaborador::getId)
+                .max()
+                .getAsInt() + 1;
+    }
+
+    public static boolean cadastrar(String nome, String senha, String dataNascimento, String email, String telefone, String cpf) {
+
+        int novoId = gerarNovoId();
 
         try {
             ValidationUtils.validarNome(nome);
         } catch (IllegalArgumentException e) {
             AlertUtils.mostrarErro("Erro", "Nome inválido. Use apenas letras de A a Z (maiúsculas ou minúsculas).");
-            return;
+            return false;
         }
 
         if (nome.length() < 4 || nome.length() > 50) {
             AlertUtils.mostrarErro("Erro", "O nome deve ter entre 4 a 50 caracteres");
-            return;
+            return false;
         }
 
 
@@ -46,42 +50,46 @@ public class ColaboradorDAO {
         for (Colaborador colaborador : colaboradores) {
             if (colaborador.getId() == novoId) {
                 AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
-                return;
+                return false;
             }
             if (colaborador.getNome().equals(nome)) {
                 AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
-                return;
+                return false;
             }
         }
 
-        Colaborador colaborador = new Colaborador(novoId, nome, senha, dataNascimento);
+        Colaborador colaborador = new Colaborador(novoId, nome, senha, dataNascimento, email, telefone, cpf);
         colaboradores.add(colaborador);
 
         ObjectPersistenceUtils.gravarDados("colaborador.dat", colaboradores);
         AlertUtils.mostrarInfo("Cadastro", "Colaborador cadastrado com sucesso");
+        return true;
     }
 
-    public static void editar(
+    public static boolean editar(
             String id,
             String nome,
             String senha,
-            String dataNascimento) {
+            String dataNascimento,
+            String email,
+            String telefone,
+            String cpf) {
 
         int novoId = ValidationUtils.strParaInt(id);
         if (novoId <= 0) {
-            return;
+            return false;
         }
 
         try {
             ValidationUtils.validarNome(nome);
         } catch (IllegalArgumentException e) {
             AlertUtils.mostrarErro("Erro", "Nome inválido. Use apenas letras de A a Z (maiúsculas ou minúsculas).");
-            return;
+            return false;
         }
 
         if (nome.length() < 4 || nome.length() > 50) {
             AlertUtils.mostrarErro("Erro", "O nome deve ter entre 4 a 50 caracteres");
-            return;
+            return false;
         }
 
 
@@ -92,12 +100,12 @@ public class ColaboradorDAO {
 
                     if (outroColaborador.getId() == novoId) {
                         AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
-                        return;
+                        return false;
                     }
 
                     if (outroColaborador.getNome().equals(nome)) {
                         AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
-                        return;
+                        return false;
                     }
 
                 }
@@ -105,12 +113,15 @@ public class ColaboradorDAO {
                 colaboradorExistente.setNome(nome);
                 colaboradorExistente.setSenha(senha);
                 colaboradorExistente.setDataNascimento(dataNascimento);
+                colaboradorExistente.setEmail(email);
+                colaboradorExistente.setTelefone(telefone);
+                colaboradorExistente.setCpf(cpf);
 
                 ObjectPersistenceUtils.gravarDados("colaborador.dat", colaboradores);
                 AlertUtils.mostrarInfo("Edição", "Colaborador editado com sucesso");
-                return;
             }
         }
+        return true;
     }
 
     public static void excluir(String id) {
@@ -137,21 +148,15 @@ public class ColaboradorDAO {
         }
     }
 
-    public static void atualizar(TableView<Colaborador> table) {
-        try {
-            ObjectPersistenceUtils.lerDados("colaborador.dat", colaboradores);
-            table.getItems().setAll(ColaboradorDAO.colaboradores);
-            AlertUtils.mostrarInfo("Atualizado", "Lista atualizada com sucesso");
-        }
-        catch (Exception e) {
-            AlertUtils.mostrarErro("Erro", "Falha ao atualizar lista: ");
-        }
-    }
 
-    public static void limpar(TextField id, TextField nome, TextField senha, TextField dataNascimento) {
-        id.clear();
+
+    public static void limpar( TextField nome, TextField senha, TextField dataNascimento, TextField email, TextField telefone, TextField cpf) {
         nome.clear();
         senha.clear();
         dataNascimento.clear();
+        email.clear();
+        telefone.clear();
+        cpf.clear();
     }
+
 }

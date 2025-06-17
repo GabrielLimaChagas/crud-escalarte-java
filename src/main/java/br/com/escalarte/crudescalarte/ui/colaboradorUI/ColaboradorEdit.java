@@ -2,6 +2,9 @@ package br.com.escalarte.crudescalarte.ui.colaboradorUI;
 
 import br.com.escalarte.crudescalarte.dao.ColaboradorDAO;
 import br.com.escalarte.crudescalarte.dao.TurnoDAO;
+import br.com.escalarte.crudescalarte.model.Colaborador;
+import br.com.escalarte.crudescalarte.model.Turno;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -14,6 +17,13 @@ import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class ColaboradorEdit {
+    private ObservableList<Colaborador> colaboradorList;
+    private Colaborador colaboradorSelecionado;
+
+    public ColaboradorEdit(ObservableList<Colaborador> colaboradorList, Colaborador colaboradorSelecionado) {
+        this.colaboradorList = colaboradorList;
+        this.colaboradorSelecionado = colaboradorSelecionado;
+    }
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Edit de Colaboradores");
 
@@ -30,6 +40,7 @@ public class ColaboradorEdit {
         TextField idField = new TextField();
         idField.setPromptText("ID");
         idField.setMaxWidth(150);
+        idField.setEditable(false);
 
         Label nomeLabel = new Label("Nome:");
         TextField nomeField = new TextField();
@@ -46,6 +57,32 @@ public class ColaboradorEdit {
         dataNascimentoField.setPromptText("dataNascimento");
         dataNascimentoField.setMaxWidth(150);
 
+        Label emailLabel = new Label("Email:");
+        TextField emailField = new TextField();
+        emailField.setPromptText("email");
+        emailField.setMaxWidth(150);
+
+        Label telefoneLabel = new Label("Telefone:");
+        TextField telefoneField = new TextField();
+        telefoneField.setPromptText("telefone");
+        telefoneField.setMaxWidth(150);
+
+        Label cpfLabel = new Label("CPF:");
+        TextField cpfField = new TextField();
+        cpfField.setPromptText("cpf");
+        cpfField.setMaxWidth(150);
+
+        if (colaboradorSelecionado != null) {
+            idField.setText(String.valueOf(colaboradorSelecionado.getId()));
+            nomeField.setText(colaboradorSelecionado.getNome());
+            senhaField.setText(colaboradorSelecionado.getSenha());
+            dataNascimentoField.setText(colaboradorSelecionado.getDataNascimento());
+            emailField.setText(colaboradorSelecionado.getEmail());
+            telefoneField.setText(colaboradorSelecionado.getTelefone());
+            cpfField.setText(colaboradorSelecionado.getCpf());
+
+        }
+
         Button editar = new Button("Editar");
         Button limpar = new Button("Limpar");
 
@@ -55,18 +92,20 @@ public class ColaboradorEdit {
                         idField.getText(),
                         nomeField.getText(),
                         senhaField.getText(),
-                        dataNascimentoField.getText())
+                        dataNascimentoField.getText(),
+                        emailField.getText(),
+                        telefoneField.getText(),
+                        cpfField.getText())
         );
 
         limpar.setOnAction(_ ->
-                ColaboradorDAO.limpar(idField, nomeField, senhaField, dataNascimentoField)
+                ColaboradorDAO.limpar( nomeField, senhaField, dataNascimentoField, emailField, telefoneField, cpfField)
         );
 
         hbox.getChildren().addAll(editar, limpar);
-        vbox.getChildren().addAll(titulo, idLabel, idField, nomeLabel, nomeField, senhaLabel, senhaField, dataNascimentoLabel, dataNascimentoField, hbox);
+        vbox.getChildren().addAll(titulo, idLabel, idField, nomeLabel, nomeField, senhaLabel, senhaField, dataNascimentoLabel, dataNascimentoField,emailLabel, emailField, telefoneLabel, telefoneField,cpfLabel, cpfField, hbox);
 
-        Scene scene = new Scene(vbox, 500, 300);
+        Scene scene = new Scene(vbox, 700, 500);
         primaryStage.setScene(scene);
-        primaryStage.show();
     }
 }
