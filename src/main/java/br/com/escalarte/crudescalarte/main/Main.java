@@ -1,6 +1,7 @@
 package br.com.escalarte.crudescalarte.main;
 
 import br.com.escalarte.crudescalarte.ui.cargoUI.CargoMain;
+import br.com.escalarte.crudescalarte.ui.colaboradorUI.ColaboradorMain;
 import br.com.escalarte.crudescalarte.ui.contratoUI.ContratoMain;
 import br.com.escalarte.crudescalarte.ui.setorUI.SetorMain;
 import br.com.escalarte.crudescalarte.ui.turnoUI.TurnoMain;
@@ -27,7 +28,7 @@ public class Main extends Application {
 
         btnContrato.setOnAction(e -> new ContratoMain().start(new Stage()));
         btnCargo.setOnAction(e -> new CargoMain().start(new Stage()));
-        // btnColaborador.setOnAction(e -> new ColaboradorUI().start(new Stage()));
+        btnColaborador.setOnAction(e -> new ColaboradorMain().start(new Stage()));
         btnSetor.setOnAction(e -> new SetorMain().start(new Stage()));
         btnTurno.setOnAction(e -> {
             Stage turnoStage = new Stage();
