@@ -6,13 +6,6 @@ public class Cargo extends BaseModel {
     private int cargaHoraria;
     private Integer interjornada;
 
-    public Cargo() {
-        super((int) (Math.random() * Integer.MAX_VALUE));
-        this.nome = "";
-        this.cargaHoraria = 0;
-        this.interjornada = null;
-    }
-
     public Cargo(int id, String nomeCargo, Integer cargaHorarioLimite, Integer intervaloInterjornada) {
         super(id);
         this.nome = nomeCargo;
