@@ -33,11 +33,6 @@ public class TurnoCadastro {
         Label titulo = new Label("Cadastro");
         titulo.setFont(Font.font("Arial", FontWeight.BOLD, 24));
 
-        Label idLabel = new Label("Id:");
-        TextField idField = new TextField();
-        idField.setPromptText("ID");
-        idField.setMaxWidth(150);
-
         Label nomeLabel = new Label("Nome:");
         TextField nomeField = new TextField();
         nomeField.setPromptText("Nome ");
@@ -45,34 +40,36 @@ public class TurnoCadastro {
 
         Label horarioInicioLabel = new Label("Horário Início:");
         TextField horarioInicioField = new TextField();
-        horarioInicioField.setPromptText("Horário Início (HH/mm)");
+        horarioInicioField.setPromptText("Horário Início (HH:mm)");
         horarioInicioField.setMaxWidth(150);
 
         Label horarioFimLabel = new Label("Horário Fim:");
         TextField horarioFimField = new TextField();
-        horarioFimField.setPromptText("Horário Fim (HH/mm)");
+        horarioFimField.setPromptText("Horário Fim (HH:mm)");
         horarioFimField.setMaxWidth(150);
 
         Button cadastrar = new Button("Cadastrar");
         Button limpar = new Button("Limpar");
 
         cadastrar.setOnAction(_ -> {
-                TurnoDAO.cadastrar(idField.getText(),
-                nomeField.getText(),
-                horarioInicioField.getText(),
-                horarioFimField.getText());
+            boolean sucesso = TurnoDAO.cadastrar(
+                    nomeField.getText(),
+                    horarioInicioField.getText(),
+                    horarioFimField.getText());
             turnosList.setAll(TurnoDAO.getTurnos());
-            primaryStage.close();
+            if (sucesso) {
+                primaryStage.close();
+            }
         });
 
         limpar.setOnAction(_ ->
-                TurnoDAO.limpar(idField, nomeField, horarioInicioField, horarioFimField)
+                TurnoDAO.limpar(nomeField, horarioInicioField, horarioFimField)
         );
 
 
 
         hbox.getChildren().addAll(cadastrar, limpar);
-        vbox.getChildren().addAll(titulo, idLabel, idField, nomeLabel, nomeField, horarioInicioLabel, horarioInicioField, horarioFimLabel, horarioFimField, hbox);
+        vbox.getChildren().addAll(titulo, nomeLabel, nomeField, horarioInicioLabel, horarioInicioField, horarioFimLabel, horarioFimField, hbox);
 
         Scene scene = new Scene(vbox, 500, 300);
         primaryStage.setScene(scene);

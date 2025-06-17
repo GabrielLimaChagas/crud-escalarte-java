@@ -2,6 +2,7 @@ package br.com.escalarte.crudescalarte.ui.turnoUI;
 
 import br.com.escalarte.crudescalarte.dao.TurnoDAO;
 import br.com.escalarte.crudescalarte.model.Turno;
+import br.com.escalarte.crudescalarte.util.AlertUtils;
 import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
 
 import javafx.collections.FXCollections;
@@ -32,6 +33,7 @@ public class TurnoMain {
         TextField idField = new TextField();
         idField.setPromptText("Selecione um ID");
         idField.setMaxWidth(150);
+        idField.setEditable(false);
 
         TableColumn<Turno, String> idCol = new TableColumn<>("Id");
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -53,6 +55,12 @@ public class TurnoMain {
         ObservableList<Turno> turnosList = FXCollections.observableArrayList(TurnoDAO.getTurnos());
         table.setItems(turnosList);
 
+        table.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                idField.setText(String.valueOf(newSelection.getId()));
+            }
+        });
+
         Button cadastrar = new Button("Cadastrar");
         Button editar = new Button("Editar");
         Button excluir = new Button("Excluir");
@@ -66,11 +74,16 @@ public class TurnoMain {
         });
 
         editar.setOnAction(_ -> {
-            Stage modalStage = new Stage();
-            modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.setTitle("Editar Turno");
-            new TurnoEdit(turnosList).start(modalStage);
-            modalStage.showAndWait();
+            Turno turnoSelecionado = table.getSelectionModel().getSelectedItem();
+            if (turnoSelecionado != null) {
+                Stage modalStage = new Stage();
+                modalStage.initModality(Modality.APPLICATION_MODAL);
+                modalStage.setTitle("Editar Turno");
+                new TurnoEdit(turnosList, turnoSelecionado).start(modalStage);
+                modalStage.showAndWait();
+            } else {
+                AlertUtils.mostrarErro("Erro", "Selecione um Turno existente para Editar");
+            }
         });
         excluir.setOnAction(_ -> {
             TurnoDAO.excluir(idField.getText());

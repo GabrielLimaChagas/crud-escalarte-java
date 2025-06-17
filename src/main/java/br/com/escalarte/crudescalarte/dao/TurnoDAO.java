@@ -17,55 +17,57 @@ public class TurnoDAO {
         return turnos;
     }
 
-    public static void cadastrar(
-            String id,
+    private static int gerarNovoId() {
+        if (turnos.isEmpty()) {
+            return 1;
+        }
+        return turnos.stream()
+                .mapToInt(Turno::getId)
+                .max()
+                .getAsInt() + 1;
+    }
+
+    public static boolean cadastrar(
             String nome,
             String horarioInicio,
             String horarioFim) {
 
-        int novoId = ValidationUtils.strParaInt(id);
-        if (novoId <= 0) {
-            return;
-        }
+        int novoId = gerarNovoId();
 
         try {
             ValidationUtils.validarNome(nome);
         } catch (IllegalArgumentException e) {
             AlertUtils.mostrarErro("Erro", "Nome inválido. Use apenas letras de A a Z (maiúsculas ou minúsculas).");
-            return;
+            return false;
         }
 
         if (nome.length() < 4 || nome.length() > 50) {
             AlertUtils.mostrarErro("Erro", "O nome deve ter entre 4 a 50 caracteres");
-            return;
+            return false;
         }
 
         LocalTime novoHorarioInicio = ValidationUtils.strParaLocalTime(horarioInicio);
         if (novoHorarioInicio.equals(LocalTime.of(0, 0))) {
-            return;
+            return false;
         }
         LocalTime novoHorarioFim = ValidationUtils.strParaLocalTime(horarioFim);
         if (novoHorarioFim.equals(LocalTime.of(0, 0))) {
-            return;
+            return false;
         }
 
         if (novoHorarioFim.isBefore(novoHorarioInicio)) {
             AlertUtils.mostrarErro("Erro", "Turno Inicio deve ser antes do Turno Final");
-            return;
+            return false;
         }
 
         for (Turno turno : turnos) {
-            if (turno.getId() == novoId) {
-                AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
-                return;
-            }
             if (turno.getNome().equals(nome)) {
                 AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
-                return;
+                return false;
             }
             if (turno.getHorarioFim().equals(novoHorarioFim) && turno.getHorarioInicio().equals(novoHorarioInicio)) {
                 AlertUtils.mostrarErro("Erro", "Há um turno com este horário já existente no sistema");
-                return;
+                return false;
             }
         }
 
@@ -74,9 +76,10 @@ public class TurnoDAO {
 
         ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
         AlertUtils.mostrarInfo("Cadastro", "Turno cadastrado com sucesso");
+        return true;
     }
 
-    public static void editar(
+    public static boolean editar(
             String id,
             String nome,
             String horarioInicio,
@@ -84,34 +87,34 @@ public class TurnoDAO {
 
         int novoId = ValidationUtils.strParaInt(id);
         if (novoId <= 0) {
-            return;
+            return false;
         }
 
         try {
             ValidationUtils.validarNome(nome);
         } catch (IllegalArgumentException e) {
             AlertUtils.mostrarErro("Erro", "Nome inválido. Use apenas letras de A a Z (maiúsculas ou minúsculas).");
-            return;
+            return false;
         }
 
         if (nome.length() < 4 || nome.length() > 50) {
             AlertUtils.mostrarErro("Erro", "O nome deve ter entre 4 a 50 caracteres");
-            return;
+            return false;
         }
 
         LocalTime novoHorarioInicio = ValidationUtils.strParaLocalTime(horarioInicio);
         if (novoHorarioInicio.equals(LocalTime.of(0, 0))) {
-            return;
+            return false;
         }
 
         LocalTime novoHorarioFim = ValidationUtils.strParaLocalTime(horarioFim);
         if (novoHorarioFim.equals(LocalTime.of(0, 0))) {
-            return;
+            return false;
         }
 
         if (novoHorarioFim.isBefore(novoHorarioInicio)) {
             AlertUtils.mostrarErro("Erro", "Turno Inicio deve ser antes do Turno Final");
-            return;
+            return false;
         }
 
         for (Turno turnoExistente : turnos) {
@@ -121,18 +124,18 @@ public class TurnoDAO {
 
                     if (outroTurno.getId() == novoId) {
                         AlertUtils.mostrarErro("Erro", "ID já existente no sistema");
-                        return;
+                        return false;
                     }
 
                     if (outroTurno.getNome().equals(nome)) {
                         AlertUtils.mostrarErro("Erro", "Nome já existente no sistema");
-                        return;
+                        return false;
                     }
 
                     if (outroTurno.getHorarioFim().equals(novoHorarioFim) &&
                             outroTurno.getHorarioInicio().equals(novoHorarioInicio)) {
                         AlertUtils.mostrarErro("Erro", "Há um turno com este horário já existente no sistema");
-                        return;
+                        return false;
                     }
                 }
 
@@ -142,9 +145,9 @@ public class TurnoDAO {
 
                 ObjectPersistenceUtils.gravarDados("turnos.dat", turnos);
                 AlertUtils.mostrarInfo("Edição", "Turno editado com sucesso");
-                return;
             }
         }
+        return true;
     }
 
     public static void excluir(String id) {
@@ -182,8 +185,7 @@ public class TurnoDAO {
         }
     }
 
-    public static void limpar(TextField id, TextField nome, TextField horarioInicio, TextField horarioFim) {
-        id.clear();
+    public static void limpar(TextField nome, TextField horarioInicio, TextField horarioFim) {
         nome.clear();
         horarioInicio.clear();
         horarioFim.clear();

@@ -14,11 +14,15 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.time.format.DateTimeFormatter;
+
 public class TurnoEdit {
     private ObservableList<Turno> turnosList;
+    private Turno turnoSelecionado;
 
-    public TurnoEdit(ObservableList<Turno> turnosList) {
+    public TurnoEdit(ObservableList<Turno> turnosList, Turno turnoSelecionado) {
         this.turnosList = turnosList;
+        this.turnoSelecionado = turnoSelecionado;
     }
 
     public void start(Stage primaryStage) {
@@ -37,6 +41,7 @@ public class TurnoEdit {
         TextField idField = new TextField();
         idField.setPromptText("ID");
         idField.setMaxWidth(150);
+        idField.setEditable(false);
 
         Label nomeLabel = new Label("Nome:");
         TextField nomeField = new TextField();
@@ -45,29 +50,40 @@ public class TurnoEdit {
 
         Label horarioInicioLabel = new Label("Horário Início:");
         TextField horarioInicioField = new TextField();
-        horarioInicioField.setPromptText("Horário Início (HH/mm)");
+        horarioInicioField.setPromptText("Horário Início (HH:mm)");
         horarioInicioField.setMaxWidth(150);
 
         Label horarioFimLabel = new Label("Horário Fim:");
         TextField horarioFimField = new TextField();
-        horarioFimField.setPromptText("Horário Fim (HH/mm)");
+        horarioFimField.setPromptText("Horário Fim (HH:mm)");
         horarioFimField.setMaxWidth(150);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+
+        if (turnoSelecionado != null) {
+            idField.setText(String.valueOf(turnoSelecionado.getId()));
+            nomeField.setText(turnoSelecionado.getNome());
+            horarioInicioField.setText(turnoSelecionado.getHorarioInicio().format(formatter));
+            horarioFimField.setText(turnoSelecionado.getHorarioFim().format(formatter));
+        }
 
         Button editar = new Button("Editar");
         Button limpar = new Button("Limpar");
 
         editar.setOnAction(_ -> {
-            TurnoDAO.editar(
+            boolean sucesso = TurnoDAO.editar(
                     idField.getText(),
                     nomeField.getText(),
                     horarioInicioField.getText(),
                     horarioFimField.getText());
             turnosList.setAll(TurnoDAO.getTurnos());
-            primaryStage.close();
+            if (sucesso) {
+                primaryStage.close();
+            }
     });
 
         limpar.setOnAction(_ ->
-                TurnoDAO.limpar(idField, nomeField, horarioInicioField, horarioFimField)
+                TurnoDAO.limpar(nomeField, horarioInicioField, horarioFimField)
         );
 
         hbox.getChildren().addAll(editar, limpar);
