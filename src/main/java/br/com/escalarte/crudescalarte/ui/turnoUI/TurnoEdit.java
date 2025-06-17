@@ -26,7 +26,7 @@ public class TurnoEdit {
     }
 
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Edit de Turnos");
+        primaryStage.setTitle("Editar Turno");
 
         VBox vbox = new VBox(1);
         HBox hbox = new HBox(1);

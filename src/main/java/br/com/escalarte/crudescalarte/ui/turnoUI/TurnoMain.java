@@ -68,7 +68,6 @@ public class TurnoMain {
         cadastrar.setOnAction(_ -> {
             Stage modalStage = new Stage();
             modalStage.initModality(Modality.APPLICATION_MODAL);
-            modalStage.setTitle("Cadastro de Turnos");
             new TurnoCadastro(turnosList).start(modalStage);
             modalStage.showAndWait();
         });
@@ -78,7 +77,6 @@ public class TurnoMain {
             if (turnoSelecionado != null) {
                 Stage modalStage = new Stage();
                 modalStage.initModality(Modality.APPLICATION_MODAL);
-                modalStage.setTitle("Editar Turno");
                 new TurnoEdit(turnosList, turnoSelecionado).start(modalStage);
                 modalStage.showAndWait();
             } else {

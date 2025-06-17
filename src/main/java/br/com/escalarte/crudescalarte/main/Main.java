@@ -39,7 +39,6 @@ public class Main extends Application {
         btnTurno.setOnAction(e -> {
             Stage turnoStage = new Stage();
             turnoStage.initModality(Modality.APPLICATION_MODAL);
-            turnoStage.setTitle("Gerenciador de Turnos");
             new TurnoMain().start(turnoStage);
             turnoStage.showAndWait();
         });

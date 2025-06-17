@@ -174,17 +174,6 @@ public class TurnoDAO {
         }
     }
 
-    public static void atualizar(TableView<Turno> table) {
-        try {
-            ObjectPersistenceUtils.lerDados("turnos.dat", TurnoDAO.turnos);
-            table.getItems().setAll(TurnoDAO.turnos);
-            AlertUtils.mostrarInfo("Atualizado", "Lista atualizada com sucesso");
-        }
-        catch (Exception e) {
-            AlertUtils.mostrarErro("Erro", "Falha ao atualizar lista: ");
-        }
-    }
-
     public static void limpar(TextField nome, TextField horarioInicio, TextField horarioFim) {
         nome.clear();
         horarioInicio.clear();
