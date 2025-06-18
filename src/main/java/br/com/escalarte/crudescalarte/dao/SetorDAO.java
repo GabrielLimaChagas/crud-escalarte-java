@@ -93,10 +93,6 @@ public class SetorDAO {
 
         for (Setor setor : setores) {
 
-            if (setor.getNomeSetor().equals(nomeSetor)) {
-                AlertUtils.mostrarErro("Erro", "Existe um setor com o mesmo nome");
-                return;
-            }
 
             if (nomeGerente == null || nomeGerente.trim().isEmpty()) {
                 AlertUtils.mostrarErro("Erro", "O nome do gerente não pode estar vazio");
