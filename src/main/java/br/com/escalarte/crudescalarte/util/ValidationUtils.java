@@ -66,6 +66,39 @@ public class ValidationUtils {
         }
     }
 
+    public static boolean validarDataNascimento(String data) {
+        String regex = "^(0[1-9]|[12][0-9]|3[01])[-/](0[1-9]|1[0-2])[-/](\\d{4})$";
+        if (!data.matches(regex)) {
+           AlertUtils.mostrarErro("Erro","Data de nascimento inválida. " + "Use um dos formatos: DD-MM-YYYY ou DD/MM/YYYY." );
+           return false;
+        }
+        return true;
+    }
+
+    public static boolean validarEmail(String email) {
+        if (!email.matches("^[\\w\\.-]+@[\\w\\.-]+\\.[a-zA-Z]{2,}$")) {
+            AlertUtils.mostrarErro("Erro", "Email inválido. Use um formato como exemplo@dominio.com.");
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean validarTelefone(String telefone) {
+        if (!telefone.matches("^(\\(?\\d{2}\\)?\\s?)?(\\d{4,5})[-\\s]?(\\d{4})$")) {
+            AlertUtils.mostrarErro("Erro","Telefone inválido. Use um formato como (11) 91234-5678 ou 1123456789.");
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean validarCPF(String cpf) {
+        if (!cpf.matches("^\\d{3}\\.?\\d{3}\\.?\\d{3}-?\\d{2}$")) {
+            AlertUtils.mostrarErro("Erro","CPF inválido. Use o formato 123.456.789-09 ou 12345678909.");
+            return false;
+        }
+        return true;
+    }
+
     public static boolean validarDatas(LocalDate inicio, LocalDate fim) {
         if (inicio == null || fim == null) {
             AlertUtils.mostrarErro("Erro", "Datas inválidas");
