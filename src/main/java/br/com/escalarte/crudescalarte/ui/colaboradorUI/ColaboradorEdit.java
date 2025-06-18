@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -72,6 +73,12 @@ public class ColaboradorEdit {
         cpfField.setPromptText("cpf");
         cpfField.setMaxWidth(150);
 
+        Label tipoUsuarioLabel = new Label("Tipo de Usuário:");
+        ComboBox<Colaborador.TipoUsuario> tipoUsuarioComboBox = new ComboBox<>();
+        tipoUsuarioComboBox.getItems().addAll(Colaborador.TipoUsuario.values());
+        tipoUsuarioComboBox.setPromptText("Selecione o tipo");
+        tipoUsuarioComboBox.setMaxWidth(150);
+
         if (colaboradorSelecionado != null) {
             idField.setText(String.valueOf(colaboradorSelecionado.getId()));
             nomeField.setText(colaboradorSelecionado.getNome());
@@ -87,6 +94,7 @@ public class ColaboradorEdit {
         Button limpar = new Button("Limpar");
 
         editar.setOnAction(_ -> {
+            Colaborador.TipoUsuario tipoSelecionado = tipoUsuarioComboBox.getValue();
             boolean sucesso = ColaboradorDAO.editar(
                     idField.getText(),
                     nomeField.getText(),
@@ -94,7 +102,8 @@ public class ColaboradorEdit {
                     dataNascimentoField.getText(),
                     emailField.getText(),
                     telefoneField.getText(),
-                    cpfField.getText());
+                    cpfField.getText(),
+                    tipoSelecionado);
             colaboradorList.setAll(ColaboradorDAO.getColaboradores());
             if (sucesso) {
                 primaryStage.close();
@@ -106,7 +115,7 @@ public class ColaboradorEdit {
         );
 
         hbox.getChildren().addAll(editar, limpar);
-        vbox.getChildren().addAll(titulo, idLabel, idField, nomeLabel, nomeField, senhaLabel, senhaField, dataNascimentoLabel, dataNascimentoField,emailLabel, emailField, telefoneLabel, telefoneField,cpfLabel, cpfField, hbox);
+        vbox.getChildren().addAll(titulo, idLabel, idField, nomeLabel, nomeField, senhaLabel, senhaField, dataNascimentoLabel, dataNascimentoField,emailLabel, emailField, telefoneLabel, telefoneField,cpfLabel, cpfField,tipoUsuarioLabel, tipoUsuarioComboBox, hbox);
 
         Scene scene = new Scene(vbox, 700, 500);
         primaryStage.setScene(scene);

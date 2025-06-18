@@ -9,8 +9,15 @@ public class Colaborador extends BaseModel implements Serializable {
     private String email;
     private String telefone;
     private String cpf;
+    private TipoUsuario tipoUsuario;
 
-    public Colaborador(int id, String nome, String senha, String dataNascimento, String email, String telefone, String cpf) {
+    public enum TipoUsuario {
+        ADMIN,
+        GERENTE,
+        OPERADOR
+    }
+
+    public Colaborador(int id, String nome, String senha, String dataNascimento, String email, String telefone, String cpf, TipoUsuario tipoUsuario) {
         super(id);
         this.nome = nome;
         this.senha = senha;
@@ -18,6 +25,7 @@ public class Colaborador extends BaseModel implements Serializable {
         this.email = email;
         this.telefone = telefone;
         this.cpf = cpf;
+        this.tipoUsuario = tipoUsuario;
     }
 
     public String getNome() {
@@ -66,6 +74,14 @@ public class Colaborador extends BaseModel implements Serializable {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public TipoUsuario getTipoUsuario() {
+        return tipoUsuario;
+    }
+
+    public void setTipoUsuario(TipoUsuario tipoUsuario) {
+        this.tipoUsuario = tipoUsuario;
     }
 
     @Override

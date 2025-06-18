@@ -59,7 +59,10 @@ public class ColaboradorMain {
         TableColumn<Colaborador, String> cpfCol = new TableColumn<>("CPF");
         cpfCol.setCellValueFactory(new PropertyValueFactory<>("cpf"));
 
-        table.getColumns().addAll(idCol, nomeCol, senhaCol, dataNascimentoCol, emailCol, telefoneCol, cpfCol);
+        TableColumn<Colaborador, Colaborador.TipoUsuario> tipoCol = new TableColumn<>("Tipo Usuario");
+        tipoCol.setCellValueFactory(new PropertyValueFactory<>("tipoUsuario"));
+
+        table.getColumns().addAll(idCol, nomeCol, senhaCol, dataNascimentoCol, emailCol, telefoneCol, cpfCol, tipoCol);
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
 

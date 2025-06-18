@@ -29,7 +29,7 @@ public class ColaboradorDAO {
                 .getAsInt() + 1;
     }
 
-    public static boolean cadastrar(String nome, String senha, String dataNascimento, String email, String telefone, String cpf) {
+    public static boolean cadastrar(String nome, String senha, String dataNascimento, String email, String telefone, String cpf, Colaborador.TipoUsuario tipoUsuario) {
 
         int novoId = gerarNovoId();
 
@@ -57,6 +57,10 @@ public class ColaboradorDAO {
             AlertUtils.mostrarErro("Erro","CPF inválido. Use o formato 123.456.789-09 ou 12345678909.");
             return false;
         }
+        if (tipoUsuario == null) {
+            AlertUtils.mostrarErro("Erro", "Selecione um tipo de usuário.");
+            return false; // Cancela o cadastro
+        }
 
         for (Colaborador colaborador : colaboradores) {
             if (colaborador.getId() == novoId) {
@@ -77,7 +81,7 @@ public class ColaboradorDAO {
             }
         }
 
-        Colaborador colaborador = new Colaborador(novoId, nome, senha, dataNascimento, email, telefone, cpf);
+        Colaborador colaborador = new Colaborador(novoId, nome, senha, dataNascimento, email, telefone, cpf, tipoUsuario);
         colaboradores.add(colaborador);
 
         ObjectPersistenceUtils.gravarDados("colaborador.dat", colaboradores);
@@ -92,7 +96,8 @@ public class ColaboradorDAO {
             String dataNascimento,
             String email,
             String telefone,
-            String cpf) {
+            String cpf,
+            Colaborador.TipoUsuario tipoUsuario) {
 
         int novoId = ValidationUtils.strParaInt(id);
         if (novoId <= 0) {
@@ -123,6 +128,17 @@ public class ColaboradorDAO {
         } catch (IllegalArgumentException e) {
             AlertUtils.mostrarErro("Erro", e.getMessage());
             return false;
+        }
+        if (!ValidationUtils.validarTelefone(telefone)) {
+            AlertUtils.mostrarErro("Erro","Telefone inválido. Use um formato como (11) 91234-5678 ou 1123456789.");
+            return false;
+        } else if (!ValidationUtils.validarCPF(cpf)) {
+            AlertUtils.mostrarErro("Erro","CPF inválido. Use o formato 123.456.789-09 ou 12345678909.");
+            return false;
+        }
+        if (tipoUsuario == null) {
+            AlertUtils.mostrarErro("Erro", "Selecione um tipo de usuário.");
+            return false; // Cancela o cadastro
         }
 
         for (Colaborador colaboradorExistente : colaboradores) {
@@ -156,6 +172,7 @@ public class ColaboradorDAO {
                 colaboradorExistente.setEmail(email);
                 colaboradorExistente.setTelefone(telefone);
                 colaboradorExistente.setCpf(cpf);
+                colaboradorExistente.setTipoUsuario(tipoUsuario);
 
                 ObjectPersistenceUtils.gravarDados("colaborador.dat", colaboradores);
                 AlertUtils.mostrarInfo("Edição", "Colaborador editado com sucesso");
@@ -190,7 +207,7 @@ public class ColaboradorDAO {
 
 
 
-    public static void limpar( TextField nome, TextField senha, TextField dataNascimento, TextField email, TextField telefone, TextField cpf) {
+    public static void limpar(TextField nome, TextField senha, TextField dataNascimento, TextField email, TextField telefone, TextField cpf) {
         nome.clear();
         senha.clear();
         dataNascimento.clear();
