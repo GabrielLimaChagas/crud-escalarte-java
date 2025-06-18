@@ -69,6 +69,23 @@ public class ContratoDAO {
             }
         }
 
+        if (diasSemanais + diasFolgaSemanal.size() > 7) {
+            AlertUtils.mostrarErro("Erro", "A soma dos dias de trabalho e folga não pode exceder 7 dias");
+            return false;
+        }
+        if (diasSemanais < diasFolgaSemanal.size()) {
+            AlertUtils.mostrarErro("Erro", "Dias de folga não podem ser maiores que dias de trabalho semanal");
+            return false;
+        }
+
+        int diasTrabalho = Integer.parseInt(diasTrabalhoSemanal);
+
+        if (diasTrabalho + diasFolgaSemanal.size() != 7) {
+            AlertUtils.mostrarErro("Erro", "A soma dos dias de trabalho e folga deve ser igual a 7 dias");
+            return false;
+        }
+
+
         if (diasFolgaSemanal == null || diasFolgaSemanal.isEmpty()) {
             AlertUtils.mostrarErro("Erro", "Pelo menos um dia de folga deve ser selecionado");
             return false;

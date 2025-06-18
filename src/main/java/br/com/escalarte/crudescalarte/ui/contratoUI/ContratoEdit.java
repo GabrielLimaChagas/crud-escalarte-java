@@ -119,6 +119,5 @@ public class ContratoEdit {
                 dataInicioField, dataFimField, diasSemanaisField, folgaLabel, diasFolgaPane, hbox);
 
         primaryStage.setScene(new Scene(vbox, 600, 500));
-        primaryStage.show();
     }
 }
