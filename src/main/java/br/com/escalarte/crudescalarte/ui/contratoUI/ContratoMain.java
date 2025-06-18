@@ -5,6 +5,7 @@ import br.com.escalarte.crudescalarte.dao.ContratoDAO;
 import br.com.escalarte.crudescalarte.model.Colaborador;
 import br.com.escalarte.crudescalarte.model.Contrato;
 import br.com.escalarte.crudescalarte.util.ObjectPersistenceUtils;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -13,6 +14,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import java.util.List;
 
 public class ContratoMain {
     public void start(Stage primaryStage) {
@@ -51,10 +54,14 @@ public class ContratoMain {
         TableColumn<Contrato, Integer> semanaCol = new TableColumn<>("Dias Semanais de trabalho");
         semanaCol.setCellValueFactory(new PropertyValueFactory<>("diasTrabalhoSemanal"));
 
-        TableColumn<Contrato, Integer> mensalCol = new TableColumn<>("Dias Mensais de trabalho");
-        mensalCol.setCellValueFactory(new PropertyValueFactory<>("diasTrabalhoMensal"));
+        TableColumn<Contrato, String> diasFolgaCol = new TableColumn<>("Dias de Folga");
+        diasFolgaCol.setCellValueFactory(cellData -> {
+            List<String> folgas = cellData.getValue().getDiasFolgaSemanal();
+            String dias = folgas != null ? String.join(", ", folgas) : "";
+            return new ReadOnlyStringWrapper(dias);
+        });
 
-        table.getColumns().addAll(idCol, colaboradorCol, statusCol, cargaCol, cargoCol, inicioCol, fimCol, semanaCol, mensalCol);
+        table.getColumns().addAll(idCol, colaboradorCol, statusCol, cargaCol, cargoCol, inicioCol, fimCol, semanaCol, diasFolgaCol);
 
         ObjectPersistenceUtils.lerDados("contratos.dat", ContratoDAO.getContratos());
         table.getItems().addAll(ContratoDAO.getContratos());

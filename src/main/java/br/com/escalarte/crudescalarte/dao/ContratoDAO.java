@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 public class ContratoDAO {
 
@@ -27,13 +28,12 @@ public class ContratoDAO {
 
     public static boolean cadastrar(String id, String status, String cargaHorariaDiaria, String cargo,
                                     String colaborador, String dataInicio, String dataFim,
-                                    String diasTrabalhoSemanal, String diasTrabalhoMensal) {
+                                    String diasTrabalhoSemanal, List<String> diasFolgaSemanal) {
 
         if (ValidationUtils.campoVazio(id) || ValidationUtils.campoVazio(status) ||
                 ValidationUtils.campoVazio(cargaHorariaDiaria) || ValidationUtils.campoVazio(cargo) ||
                 ValidationUtils.campoVazio(colaborador) || ValidationUtils.campoVazio(dataInicio) ||
-                ValidationUtils.campoVazio(dataFim) || ValidationUtils.campoVazio(diasTrabalhoSemanal) ||
-                ValidationUtils.campoVazio(diasTrabalhoMensal)) {
+                ValidationUtils.campoVazio(dataFim) || ValidationUtils.campoVazio(diasTrabalhoSemanal)) {
             AlertUtils.mostrarErro("Erro", "Todos os campos devem ser preenchidos");
             return false;
         }
@@ -51,15 +51,9 @@ public class ContratoDAO {
         if (!ValidationUtils.validarDatas(inicio, fim)) return false;
 
         int diasSemanais = ValidationUtils.strParaInt(diasTrabalhoSemanal);
-        int diasMensais = ValidationUtils.strParaInt(diasTrabalhoMensal);
 
         if (diasSemanais <= 0 || diasSemanais > 7) {
             AlertUtils.mostrarErro("Erro", "Dias de trabalho semanal deve estar entre 1 e 7");
-            return false;
-        }
-
-        if (diasMensais <= 0 || diasMensais > 31) {
-            AlertUtils.mostrarErro("Erro", "Dias de trabalho mensal deve estar entre 1 e 31");
             return false;
         }
 
@@ -75,6 +69,11 @@ public class ContratoDAO {
             }
         }
 
+        if (diasFolgaSemanal == null || diasFolgaSemanal.isEmpty()) {
+            AlertUtils.mostrarErro("Erro", "Pelo menos um dia de folga deve ser selecionado");
+            return false;
+        }
+
         Contrato novoContrato = new Contrato(
                 novoId,
                 status,
@@ -84,7 +83,7 @@ public class ContratoDAO {
                 inicio,
                 fim,
                 diasSemanais,
-                diasMensais
+                diasFolgaSemanal
         );
 
         contratos.add(novoContrato);
@@ -95,7 +94,7 @@ public class ContratoDAO {
     }
 
 
-    public static void editar( String id, String status, String cargaHorariaDiaria, String cargo, String colaborador, String dataInicio, String dataFim, String diasTrabalhoSemanal, String diasTrabalhoMensal) {
+    public static void editar( String id, String status, String cargaHorariaDiaria, String cargo, String colaborador, String dataInicio, String dataFim, String diasTrabalhoSemanal, List<String> diasFolgaSemanal) {
         if (ValidationUtils.campoVazio(id)) return;
 
         int idEditado = ValidationUtils.strParaInt(id);
@@ -118,9 +117,8 @@ public class ContratoDAO {
                 if (!ValidationUtils.validarDatas(inicio, fim)) return;
 
                 int diasSemanais = ValidationUtils.strParaInt(diasTrabalhoSemanal);
-                int diasMensais = ValidationUtils.strParaInt(diasTrabalhoMensal);
 
-                if (diasSemanais <= 0 || diasSemanais > 7 || diasMensais <= 0 || diasMensais > 31) {
+                if (diasSemanais <= 0 || diasSemanais > 7) {
                     AlertUtils.mostrarErro("Erro", "Quantidade de dias de trabalho inválida");
                     return;
                 }
@@ -138,7 +136,7 @@ public class ContratoDAO {
                 c.setDataInicio(inicio);
                 c.setDataFim(fim);
                 c.setDiasTrabalhoSemanal(diasSemanais);
-                c.setDiasTrabalhoMensal(diasMensais);
+                c.setDiasFolgaSemanal(diasFolgaSemanal);
 
                 ObjectPersistenceUtils.gravarDados("contratos.dat", contratos);
                 AlertUtils.mostrarInfo("Edição", "Contrato editado com sucesso");

@@ -12,6 +12,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class ContratoEdit {
     private ObservableList<Contrato> contratosList;
 
@@ -56,8 +60,16 @@ public class ContratoEdit {
         TextField diasSemanaisField = new TextField();
         diasSemanaisField.setPromptText("Dias Trabalho Semana");
 
-        TextField diasMensaisField = new TextField();
-        diasMensaisField.setPromptText("Dias Trabalho Mês");
+        Label folgaLabel = new Label("Dias de Folga:");
+        List<String> diasSemana = Arrays.asList("Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado");
+        List<CheckBox> checkBoxes = new ArrayList<>();
+        FlowPane diasFolgaPane = new FlowPane(10, 5);
+        diasFolgaPane.setPrefWrapLength(300);
+        for (String dia : diasSemana) {
+            CheckBox cb = new CheckBox(dia);
+            checkBoxes.add(cb);
+            diasFolgaPane.getChildren().add(cb);
+        }
 
         if (contratoSelecionado != null) {
             idField.setText(String.valueOf(contratoSelecionado.getId()));
@@ -68,12 +80,26 @@ public class ContratoEdit {
             dataInicioField.setText(contratoSelecionado.getDataInicio().toString());
             dataFimField.setText(contratoSelecionado.getDataFim().toString());
             diasSemanaisField.setText(String.valueOf(contratoSelecionado.getDiasTrabalhoSemanal()));
-            diasMensaisField.setText(String.valueOf(contratoSelecionado.getDiasTrabalhoMensal()));
+
+            if (contratoSelecionado.getDiasFolgaSemanal() != null) {
+                for (CheckBox cb : checkBoxes) {
+                    if (contratoSelecionado.getDiasFolgaSemanal().contains(cb.getText())) {
+                        cb.setSelected(true);
+                    }
+                }
+            }
         }
 
         Button editar = new Button("Editar");
 
-        editar.setOnAction(_ -> { ContratoDAO.editar(
+        editar.setOnAction(_ -> {
+            List<String> diasFolgaSelecionados = new ArrayList<>();
+            for (CheckBox cb : checkBoxes) {
+                if (cb.isSelected()) {
+                    diasFolgaSelecionados.add(cb.getText());
+                }
+            }
+            ContratoDAO.editar(
                     idField.getText(),
                     statusField.getText(),
                     cargaDiariaField.getText(),
@@ -82,7 +108,7 @@ public class ContratoEdit {
                     dataInicioField.getText(),
                     dataFimField.getText(),
                     diasSemanaisField.getText(),
-                    diasMensaisField.getText()
+                    diasFolgaSelecionados
             );
             contratosList.setAll(ContratoDAO.getContratos());
             primaryStage.close();
@@ -90,7 +116,7 @@ public class ContratoEdit {
 
         hbox.getChildren().addAll(editar);
         vbox.getChildren().addAll(titulo, idField,colaboradorField, statusField, cargaDiariaField, cargoField,
-                dataInicioField, dataFimField, diasSemanaisField, diasMensaisField, hbox);
+                dataInicioField, dataFimField, diasSemanaisField, folgaLabel, diasFolgaPane, hbox);
 
         primaryStage.setScene(new Scene(vbox, 600, 500));
         primaryStage.show();

@@ -2,6 +2,7 @@ package br.com.escalarte.crudescalarte.model;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 public class Contrato extends BaseModel implements Serializable {
 
@@ -12,11 +13,11 @@ public class Contrato extends BaseModel implements Serializable {
     private LocalDate dataInicio;
     private LocalDate dataFim;
     private int diasTrabalhoSemanal;
-    private int diasTrabalhoMensal;
+    private List<String> diasFolgaSemanal;
 
     public Contrato(int id, String status, double cargaHorariaDiaria, String cargo, String colaborador,
                     LocalDate dataInicio, LocalDate dataFim,
-                    int diasTrabalhoSemanal, int diasTrabalhoMensal) {
+                    int diasTrabalhoSemanal, List<String> diasFolgaSemanal) {
         super(id);
         this.status = status;
         this.cargaHorariaDiaria = cargaHorariaDiaria;
@@ -25,7 +26,7 @@ public class Contrato extends BaseModel implements Serializable {
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.diasTrabalhoSemanal = diasTrabalhoSemanal;
-        this.diasTrabalhoMensal = diasTrabalhoMensal;
+        this.diasFolgaSemanal = diasFolgaSemanal;
     }
 
     // Getters e Setters
@@ -86,14 +87,13 @@ public class Contrato extends BaseModel implements Serializable {
         this.diasTrabalhoSemanal = diasTrabalhoSemanal;
     }
 
-    public int getDiasTrabalhoMensal() {
-        return diasTrabalhoMensal;
+    public List<String> getDiasFolgaSemanal() {
+        return diasFolgaSemanal;
     }
 
-    public void setDiasTrabalhoMensal(int diasTrabalhoMensal) {
-        this.diasTrabalhoMensal = diasTrabalhoMensal;
+    public void setDiasFolgaSemanal(List<String> diasFolgaSemanal) {
+        this.diasFolgaSemanal = diasFolgaSemanal;
     }
-
     @Override
     public String toString() {
         return colaborador + " - " + cargo + " - " + status;
