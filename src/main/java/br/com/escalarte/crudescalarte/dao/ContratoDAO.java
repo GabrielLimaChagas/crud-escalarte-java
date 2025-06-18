@@ -25,14 +25,17 @@ public class ContratoDAO {
         return contratos;
     }
 
-    public static void cadastrar( String id,  String status, String cargaHorariaDiaria, String cargo, String colaborador, String dataInicio, String dataFim, String diasTrabalhoSemanal, String diasTrabalhoMensal) {
+    public static boolean cadastrar(String id, String status, String cargaHorariaDiaria, String cargo,
+                                    String colaborador, String dataInicio, String dataFim,
+                                    String diasTrabalhoSemanal, String diasTrabalhoMensal) {
 
         if (ValidationUtils.campoVazio(id) || ValidationUtils.campoVazio(status) ||
                 ValidationUtils.campoVazio(cargaHorariaDiaria) || ValidationUtils.campoVazio(cargo) ||
                 ValidationUtils.campoVazio(colaborador) || ValidationUtils.campoVazio(dataInicio) ||
                 ValidationUtils.campoVazio(dataFim) || ValidationUtils.campoVazio(diasTrabalhoSemanal) ||
                 ValidationUtils.campoVazio(diasTrabalhoMensal)) {
-            return;
+            AlertUtils.mostrarErro("Erro", "Todos os campos devem ser preenchidos");
+            return false;
         }
 
         int novoId = gerarNovoId();
@@ -40,35 +43,35 @@ public class ContratoDAO {
         double cargaDiaria = ValidationUtils.strParaDouble(cargaHorariaDiaria);
         if (cargaDiaria <= 0 || cargaDiaria > 24) {
             AlertUtils.mostrarErro("Erro", "Carga horária diária deve estar entre 1 e 24 horas");
-            return;
+            return false;
         }
 
         LocalDate inicio = ValidationUtils.strParaLocalDate(dataInicio);
         LocalDate fim = ValidationUtils.strParaLocalDate(dataFim);
-        if (!ValidationUtils.validarDatas(inicio, fim)) return;
+        if (!ValidationUtils.validarDatas(inicio, fim)) return false;
 
         int diasSemanais = ValidationUtils.strParaInt(diasTrabalhoSemanal);
         int diasMensais = ValidationUtils.strParaInt(diasTrabalhoMensal);
 
         if (diasSemanais <= 0 || diasSemanais > 7) {
             AlertUtils.mostrarErro("Erro", "Dias de trabalho semanal deve estar entre 1 e 7");
-            return;
+            return false;
         }
 
         if (diasMensais <= 0 || diasMensais > 31) {
             AlertUtils.mostrarErro("Erro", "Dias de trabalho mensal deve estar entre 1 e 31");
-            return;
+            return false;
         }
 
         if (cargo.length() < 2 || colaborador.length() < 2) {
             AlertUtils.mostrarErro("Erro", "Cargo e nome do colaborador devem ter no mínimo 2 caracteres");
-            return;
+            return false;
         }
 
         for (Contrato c : contratos) {
             if (c.getId() == novoId) {
                 AlertUtils.mostrarErro("Erro", "ID já existente");
-                return;
+                return false;
             }
         }
 
@@ -87,7 +90,10 @@ public class ContratoDAO {
         contratos.add(novoContrato);
         ObjectPersistenceUtils.gravarDados("contratos.dat", contratos);
         AlertUtils.mostrarInfo("Cadastro", "Contrato cadastrado com sucesso");
+
+        return true;
     }
+
 
     public static void editar( String id, String status, String cargaHorariaDiaria, String cargo, String colaborador, String dataInicio, String dataFim, String diasTrabalhoSemanal, String diasTrabalhoMensal) {
         if (ValidationUtils.campoVazio(id)) return;

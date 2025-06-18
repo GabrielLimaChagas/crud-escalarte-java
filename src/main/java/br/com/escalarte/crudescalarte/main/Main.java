@@ -26,7 +26,13 @@ public class Main extends Application {
 
         // Abrem janelas específicas quando os botões são clicados
 
-        btnContrato.setOnAction(e -> new ContratoMain().start(new Stage()));
+        btnContrato.setOnAction(e -> {
+            Stage contratoStage = new Stage();
+            contratoStage.initModality(Modality.APPLICATION_MODAL);
+            contratoStage.setTitle("Gerenciador de Contrato");
+            new ContratoMain().start(contratoStage);
+            contratoStage.showAndWait();
+        });
         btnCargo.setOnAction(e -> {
             // new CargoMain().start(new Stage());
             Stage cargoStage = new Stage();

@@ -11,6 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class ContratoMain {
@@ -66,16 +67,28 @@ public class ContratoMain {
         Button excluir = new Button("Excluir");
         Button atualizar = new Button("Atualizar");
 
-        cadastrar.setOnAction(_ -> new ContratoCadastro(contratosList).start(new Stage()));
+        cadastrar.setOnAction(_ -> {
+            Stage modalStage = new Stage();
+            modalStage.initModality(Modality.APPLICATION_MODAL);
+            modalStage.setTitle("Cadastro de Contrato");
+            new ContratoCadastro(contratosList).start(modalStage);
+            modalStage.showAndWait();
+        });
+
         editar.setOnAction(_ -> {
             Contrato selecionado = table.getSelectionModel().getSelectedItem();
             if (selecionado != null) {
-                new ContratoEdit(contratosList).start(new Stage(), selecionado);
+                Stage modalStage = new Stage();
+                modalStage.initModality(Modality.APPLICATION_MODAL);
+                modalStage.setTitle("Editar Contrato");
+                new ContratoEdit(contratosList).start(modalStage, selecionado);
+                modalStage.showAndWait();
             } else {
                 Alert alerta = new Alert(Alert.AlertType.WARNING, "Selecione um contrato para editar.");
                 alerta.showAndWait();
             }
         });
+
         excluir.setOnAction(_ -> {
             ContratoDAO.excluir(idField.getText());
             contratosList.setAll(ContratoDAO.getContratos());
@@ -86,6 +99,5 @@ public class ContratoMain {
         vbox.getChildren().addAll(table, botoesBox, excluirBox);
 
         primaryStage.setScene(new Scene(vbox, 850, 500));
-        primaryStage.show();
     }
 }

@@ -62,7 +62,7 @@ public class ContratoCadastro {
         Button limpar = new Button("Limpar");
 
         cadastrar.setOnAction(_ -> {
-            ContratoDAO.cadastrar(
+            boolean sucesso = ContratoDAO.cadastrar(
                     idField.getText(),
                     statusField.getText(),
                     cargaDiariaField.getText(),
@@ -71,11 +71,15 @@ public class ContratoCadastro {
                     dataInicioField.getText(),
                     dataFimField.getText(),
                     diasSemanaisField.getText(),
-                    diasMensaisField.getText());
+                    diasMensaisField.getText()
+            );
 
-            contratosList.setAll(ContratoDAO.getContratos());
-            primaryStage.close();
+            if (sucesso) {
+                contratosList.setAll(ContratoDAO.getContratos());
+                primaryStage.close();
+            }
         });
+
 
         limpar.setOnAction(_ -> {
             ContratoDAO.limpar(
@@ -89,6 +93,5 @@ public class ContratoCadastro {
                 dataInicioField, dataFimField, diasSemanaisField, diasMensaisField, hbox);
 
         primaryStage.setScene(new Scene(vbox, 600, 500));
-        primaryStage.show();
     }
 }
