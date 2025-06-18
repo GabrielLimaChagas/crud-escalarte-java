@@ -86,17 +86,20 @@ public class ColaboradorEdit {
         Button editar = new Button("Editar");
         Button limpar = new Button("Limpar");
 
-        editar.setOnAction(_ ->
-
-                ColaboradorDAO.editar(
-                        idField.getText(),
-                        nomeField.getText(),
-                        senhaField.getText(),
-                        dataNascimentoField.getText(),
-                        emailField.getText(),
-                        telefoneField.getText(),
-                        cpfField.getText())
-        );
+        editar.setOnAction(_ -> {
+            boolean sucesso = ColaboradorDAO.editar(
+                    idField.getText(),
+                    nomeField.getText(),
+                    senhaField.getText(),
+                    dataNascimentoField.getText(),
+                    emailField.getText(),
+                    telefoneField.getText(),
+                    cpfField.getText());
+            colaboradorList.setAll(ColaboradorDAO.getColaboradores());
+            if (sucesso) {
+                primaryStage.close();
+            }
+        });
 
         limpar.setOnAction(_ ->
                 ColaboradorDAO.limpar( nomeField, senhaField, dataNascimentoField, emailField, telefoneField, cpfField)

@@ -44,7 +44,7 @@ public class Main extends Application {
         btnColaborador.setOnAction(e -> {
             Stage colaboradorStage = new Stage();
             colaboradorStage.initModality(Modality.APPLICATION_MODAL);
-            colaboradorStage.setTitle("Gerenciador de Turnos");
+            colaboradorStage.setTitle("Gerenciador de Colaboradores");
             new ColaboradorMain().start(colaboradorStage);
             colaboradorStage.showAndWait();
         });
